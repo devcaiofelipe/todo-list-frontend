@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.messages {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  /* background-color: #E5E4E2; */
+  background-color: #f1efef;
+}
+
+.handle-task-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100px;
+  width: 70%;
+}
+/* f1efef2d */
+
+.add-task-input {
+  flex: 1;
+  height: 50%;
+  font-size: 18px;
+  border: none;
+  text-indent: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 3px rgba(102, 102, 102, 0.904);
+}
+
+.add-task-input:focus {
+  border-color: rgba(102, 102, 102, 0.904);
+  border: 1px;
+}
+
+.add-task-button, .delete-all-tasks-button {
+  padding: 16px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  font-size: 16px;
+}
+
+.add-task-button {
+  margin-left: 15px;
+  background-color: #4BB543;
+}
+
+.delete-all-tasks-button {
+  background-color: #bb4747;
+}
+
+.tasks-container {
+  width: 70%;
+}
+
+.container-checkbox-all {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.no-tasks {
+  font-size: 30px;
+  margin-left: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
