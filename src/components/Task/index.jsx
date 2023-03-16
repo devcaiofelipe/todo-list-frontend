@@ -1,5 +1,5 @@
 import './styles.css';
-import { AiOutlineDelete } from "react-icons/ai";
+import { BsTrash } from "react-icons/bs";
 
 
 const Task = ({ taskId, description, checked, handleCheckTask, handleDeleteTask }) => {
@@ -9,7 +9,7 @@ const Task = ({ taskId, description, checked, handleCheckTask, handleDeleteTask 
         <input type="checkbox" checked={checked} onChange={() => handleCheckTask(taskId)} className="task-container-checkbox"/>
         <span className="messages">{description}</span>
       </div>
-      <button className="task-container-button" onClick={() => handleDeleteTask(taskId)}><AiOutlineDelete/></button>
+      <button className="task-container-button" onClick={() => handleDeleteTask(taskId)}><BsTrash/></button>
     </li>
   )
 }

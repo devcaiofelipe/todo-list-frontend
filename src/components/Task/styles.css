@@ -21,11 +21,11 @@
 }
 
 .task-container-button {
-  padding: 15px;
-  background-color: #bb4747;
-  color: white;
+  padding: 8px;
+  background-color: #FFE8EC;
+  color: #FF1943;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   margin-right: 10px;
 }
 
@@ -34,4 +34,5 @@
   height: 14px;
   margin-left: 10px;
   margin-right: 20px;
+  accent-color: red;
 }

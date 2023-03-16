@@ -53,11 +53,11 @@
 
 .add-task-button {
   margin-left: 15px;
-  background-color: #4BB543;
+  background-color: #6ECA22;
 }
 
 .delete-all-tasks-button {
-  background-color: #bb4747;
+  background-color: #FF1943;
 }
 
 .tasks-container {
@@ -76,4 +76,15 @@
   margin-left: 10px;
   text-align: center;
   margin-bottom: 20px;
+}
+
+.check-buttons-container {
+  width: 70%;
+}
+
+.check-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
 }

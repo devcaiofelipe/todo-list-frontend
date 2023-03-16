@@ -50,6 +50,14 @@ const Home = () => {
     setTasks(newTasks);
   }
 
+  const handleCheckAll = () => {
+    const newTasks = tasks.map((task) => ({
+      ...task,
+      checked: true
+    }))
+    setTasks(newTasks);
+  }
+
 
   return (
     <div className="container">
@@ -71,7 +79,13 @@ const Home = () => {
             handleDeleteTask={handleDeleteTask} />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
-      { tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null }
+      <div className="check-buttons-container">
+        <div className="check-buttons">
+        { tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>Check all</button> : null }
+        { tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null }     
+        </div>
+      </div>
+      
     </div>
   )
 }
