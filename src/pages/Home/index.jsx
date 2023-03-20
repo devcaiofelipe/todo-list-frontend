@@ -2,11 +2,23 @@ import './styles.css'
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Task from '../../components/Task'
+import DeleteModal from '../../components/DeleteModal';
 import { VscAdd } from "react-icons/vsc";
 
 const Home = () => {
   const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState([]);
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+
+  // if (modal) {
+  //   document.body.classList.add('active-modal')
+  // } else {
+  //   document.body.classList.remove('active-modal')
+  // }
 
   const validateInput = (value) => {
     return !!value;
@@ -33,6 +45,7 @@ const Home = () => {
   }
 
   const handleDeleteTask = (taskId) => {
+    setModal(!modal);
     const newTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(newTasks);
   }
@@ -58,7 +71,6 @@ const Home = () => {
     setTasks(newTasks);
   }
 
-
   return (
     <div className="container">
       <header>
@@ -67,8 +79,11 @@ const Home = () => {
       </header>
       <div className="handle-task-container">
         <input className="add-task-input messages" type="text" placeholder="Add new task..." value={task} onChange={handleInputChange}></input>
-        <button className="add-task-button" onClick={handleAddTask}><VscAdd/></button>
+        <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
+      {modal && <DeleteModal
+        toggleModal={toggleModal}
+      />}
       <ul className="tasks-container">
         {tasks.length > 0 ?
           tasks.map((task) => <Task key={task.id}
@@ -76,16 +91,17 @@ const Home = () => {
             description={task.description}
             checked={task.checked}
             handleCheckTask={handleCheckTask}
-            handleDeleteTask={handleDeleteTask} />)
+            handleDeleteTask={handleDeleteTask}
+            toggleModal={toggleModal} />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
       <div className="check-buttons-container">
         <div className="check-buttons">
-        { tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>Check all</button> : null }
-        { tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null }     
+          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>Check all</button> : null}
+          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
-      
+
     </div>
   )
 }
