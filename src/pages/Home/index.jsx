@@ -9,6 +9,7 @@ const Home = () => {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [modal, setModal] = useState(false);
+  const [idToDelete, setIdToDelete] = useState('');
 
   const toggleModal = () => {
     setModal(!modal)
@@ -19,6 +20,11 @@ const Home = () => {
   // } else {
   //   document.body.classList.remove('active-modal')
   // }
+
+  const setTaskToDelete = (taskId) => {
+    setModal(!modal);
+    setIdToDelete(taskId);
+  }
 
   const validateInput = (value) => {
     return !!value;
@@ -45,7 +51,7 @@ const Home = () => {
   }
 
   const handleDeleteTask = (taskId) => {
-    setModal(!modal);
+    toggleModal()
     const newTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(newTasks);
   }
@@ -83,6 +89,8 @@ const Home = () => {
       </div>
       {modal && <DeleteModal
         toggleModal={toggleModal}
+        deleteAction={handleDeleteTask}
+        taskToDelete={idToDelete}
       />}
       <ul className="tasks-container">
         {tasks.length > 0 ?
@@ -91,8 +99,7 @@ const Home = () => {
             description={task.description}
             checked={task.checked}
             handleCheckTask={handleCheckTask}
-            handleDeleteTask={handleDeleteTask}
-            toggleModal={toggleModal} />)
+            setTaskToDelete={setTaskToDelete} />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
       <div className="check-buttons-container">

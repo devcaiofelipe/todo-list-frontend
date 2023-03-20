@@ -1,9 +1,7 @@
 import './styles.css';
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-const DeleteModal = ({ toggleModal }) => {
-
-
+const DeleteModal = ({ toggleModal, taskToDelete, deleteAction }) => {
   return (
     <div className="modal">
       <div onClick={toggleModal} className="overlay"></div>
@@ -21,7 +19,7 @@ const DeleteModal = ({ toggleModal }) => {
           <button onClick={toggleModal} className="button cancel font">
             Cancel
           </button>
-          <button onClick={toggleModal} className="button confirm font">      
+          <button onClick={() => deleteAction(taskToDelete)} className="button confirm font">      
             Delete
           </button>
         </div>

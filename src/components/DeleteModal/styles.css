@@ -40,7 +40,7 @@ body.active-modal {
 
 @keyframes animatetop {
   from {top:-300px; opacity:0}
-  to {top:0; opacity:1}
+  to {bottom:0; opacity:1}
 }
 
 .close-modal {
