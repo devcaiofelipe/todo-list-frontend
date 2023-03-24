@@ -44,12 +44,12 @@ const Home = () => {
   //   document.body.classList.remove('active-modal')
   // }
 
-  const setTaskToDelete = (taskId) => {
+  const handleTaskToDelete = (taskId) => {
     setDeleteModal(!deleteModal);
     setIdToDelete(taskId);
   }
 
-  const setTaskToUpdate = (taskId, newDescription) => {
+  const handleTaskToUpdate = (taskId, newDescription) => {
     setUpdateModal(!updateModal);
     setToUpdate({ taskId, newDescription });
   }
@@ -126,7 +126,7 @@ const Home = () => {
         deleteAction={handleDeleteTask}
         taskToDelete={idToDelete}
       />}
-      {updateModal&& <UpdateModal
+      {updateModal && <UpdateModal
         toggleModal={toggleUpdateModal}
       />}
       <ul className="tasks-container">
@@ -136,8 +136,8 @@ const Home = () => {
             description={task.description}
             checked={task.checked}
             handleCheckTask={handleCheckTask}
-            setTaskToDelete={setTaskToDelete}
-            setTaskToUpdate={setTaskToUpdate}/>)
+            handleTaskToDelete={handleTaskToDelete}
+            handleTaskToUpdate={handleTaskToUpdate}/>)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
       <div className="check-buttons-container">

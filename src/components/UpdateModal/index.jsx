@@ -1,7 +1,9 @@
 import './styles.css';
 import { HiPencilAlt } from "react-icons/hi";
 
-const UpdateModal = ({ toggleModal }) => {
+const UpdateModal = ({ toggleModal, oldTask }) => {
+  // const { description: oldDescription } = oldTask;
+
   return (
     <div className="modal">
       <div onClick={toggleModal} className="overlay"></div>
