@@ -1,8 +1,14 @@
 import './styles.css';
 import { HiPencilAlt } from "react-icons/hi";
+import { useState } from "react";
 
-const UpdateModal = ({ toggleModal, oldTask }) => {
-  // const { description: oldDescription } = oldTask;
+const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask }) => {
+  const [newDescription, setNewDescription] = useState('');
+
+  const handleInputChange = (event) => {
+    console.log(event.target.value)
+    setNewDescription(event.target.value);
+  }
 
   return (
     <div className="modal">
@@ -15,13 +21,13 @@ const UpdateModal = ({ toggleModal, oldTask }) => {
             </i>
           
         </div>
-        <input type="text" className="task-update-input"/>
+        <input type="text" className="task-update-input" onChange={handleInputChange}/>
         
         <div className="buttons-update">
           <button onClick={toggleModal} className="button cancel font">
             Cancel
           </button>
-          <button className="button update font">      
+          <button className="button update font" onClick={() => handleUpdateTask(idToUpdate, newDescription)}>      
             Update
           </button>
         </div>

@@ -2,7 +2,7 @@ import './styles.css';
 import { BsTrash, BsPencil } from "react-icons/bs";
 
 
-const Task = ({ taskId, description, checked, handleCheckTask, handleTaskToDelete, handleTaskToUpdate }) => {
+const Task = ({ taskId, description, checked, handleCheckTask, handleTaskToDelete, handleTaskIdToUpdate }) => {
   return (
     <li key={taskId} className="task-container" style={ checked ? { borderStyle: 'solid', borderWidth: '2px', borderColor: 'red' } : null }>
       <div>
@@ -10,7 +10,7 @@ const Task = ({ taskId, description, checked, handleCheckTask, handleTaskToDelet
         <p className="messages">{description}</p>
       </div>
       <div>
-        <button className="task-container-button update-button" onClick={() => handleTaskToUpdate(taskId)}><BsPencil/></button>
+        <button className="task-container-button update-button" onClick={() => handleTaskIdToUpdate(taskId)}><BsPencil/></button>
         <button className="task-container-button confirm-button" onClick={() => handleTaskToDelete(taskId)}><BsTrash/></button>
       </div>
     </li>

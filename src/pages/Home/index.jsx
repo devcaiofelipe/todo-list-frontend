@@ -28,7 +28,7 @@ const Home = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState('');
-  const [toUpdate, setToUpdate] = useState({});
+  const [idToUpdate, setIdToUpdate] = useState('');
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -49,9 +49,9 @@ const Home = () => {
     setIdToDelete(taskId);
   }
 
-  const handleTaskToUpdate = (taskId, newDescription) => {
+  const handleTaskIdToUpdate = (taskId) => {
     setUpdateModal(!updateModal);
-    setToUpdate({ taskId, newDescription });
+    setIdToUpdate(taskId);
   }
 
   const validateInput = (value) => {
@@ -110,6 +110,21 @@ const Home = () => {
       handleAddTask();
     }
   }
+  
+  const handleUpdateTask = (taskId, newDescription) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return {
+          ...task,
+          description: newDescription
+        }
+      } else {
+        return task;
+      } 
+    })
+    setTasks(newTasks);
+    toggleUpdateModal()
+  }
 
   return (
     <div className="container">
@@ -128,6 +143,8 @@ const Home = () => {
       />}
       {updateModal && <UpdateModal
         toggleModal={toggleUpdateModal}
+        idToUpdate={idToUpdate}
+        handleUpdateTask={handleUpdateTask}
       />}
       <ul className="tasks-container">
         {tasks.length > 0 ?
@@ -137,7 +154,8 @@ const Home = () => {
             checked={task.checked}
             handleCheckTask={handleCheckTask}
             handleTaskToDelete={handleTaskToDelete}
-            handleTaskToUpdate={handleTaskToUpdate}/>)
+            handleTaskIdToUpdate={handleTaskIdToUpdate}
+            />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
       <div className="check-buttons-container">
