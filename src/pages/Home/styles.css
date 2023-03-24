@@ -4,6 +4,16 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%
+}
+
+body {
+  min-height: 100vh;
+  background-color: #F0F2F5;
+}
+
+
 .messages {
   font-family: 'Montserrat', sans-serif;
 }
@@ -13,9 +23,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 100vh;
   width: 100%;
-  background-color: #F0F2F5;
 }
 
 .handle-task-container {
@@ -23,13 +31,12 @@
   flex-direction: row;
   align-items: center;
   height: 100px;
-  width: 70%;
+  width: 50%;
 }
-/* f1efef2d */
 
 .add-task-input {
   flex: 1;
-  height: 50%;
+  height: 50px;
   font-size: 18px;
   border-style: solid;
   border-color: rgba(192, 190, 190, 0.904);
@@ -67,12 +74,14 @@
 .delete-all-tasks-button {
   background-color: #FF1943;
 }
+
 .delete-all-tasks-button:hover {
   background-color: #860a21;
 }
 
 .tasks-container {
-  width: 70%;
+  margin-top: 30px;
+  width: 60%;
 }
 
 .container-checkbox-all {

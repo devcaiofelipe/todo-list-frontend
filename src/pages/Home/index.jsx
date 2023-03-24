@@ -3,16 +3,39 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
+import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from "react-icons/vsc";
 
 const Home = () => {
   const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [tasks, setTasks] = useState([
+    {
+      id: uuidv4(),
+      description: 'Estudar javascript',
+      checked: false,
+    },
+    {
+      id: uuidv4(),
+      description: 'Estudar python',
+      checked: false,
+    },
+    {
+      id: uuidv4(),
+      description: 'Estudar swift',
+      checked: false,
+    }
+  ]);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState('');
+  const [toUpdate, setToUpdate] = useState({});
 
-  const toggleModal = () => {
-    setModal(!modal)
+  const toggleDeleteModal = () => {
+    setDeleteModal(!deleteModal)
+  }
+
+  const toggleUpdateModal = () => {
+    setUpdateModal(!updateModal)
   }
 
   // if (modal) {
@@ -22,8 +45,13 @@ const Home = () => {
   // }
 
   const setTaskToDelete = (taskId) => {
-    setModal(!modal);
+    setDeleteModal(!deleteModal);
     setIdToDelete(taskId);
+  }
+
+  const setTaskToUpdate = (taskId, newDescription) => {
+    setUpdateModal(!updateModal);
+    setToUpdate({ taskId, newDescription });
   }
 
   const validateInput = (value) => {
@@ -51,7 +79,7 @@ const Home = () => {
   }
 
   const handleDeleteTask = (taskId) => {
-    toggleModal()
+    toggleDeleteModal()
     const newTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(newTasks);
   }
@@ -77,6 +105,12 @@ const Home = () => {
     setTasks(newTasks);
   }
 
+  const handleKeyPressed = (e) => {
+    if (e.key === 'Enter') {
+      handleAddTask();
+    }
+  }
+
   return (
     <div className="container">
       <header>
@@ -84,13 +118,16 @@ const Home = () => {
         <p className="messages">You've got {tasks.length} tasks coming up in the next days.</p>
       </header>
       <div className="handle-task-container">
-        <input className="add-task-input messages" type="text" placeholder="Add new task..." value={task} onChange={handleInputChange}></input>
+        <input className="add-task-input messages" type="text" placeholder="Add new task..." value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
-      {modal && <DeleteModal
-        toggleModal={toggleModal}
+      {deleteModal && <DeleteModal
+        toggleModal={toggleDeleteModal}
         deleteAction={handleDeleteTask}
         taskToDelete={idToDelete}
+      />}
+      {updateModal&& <UpdateModal
+        toggleModal={toggleUpdateModal}
       />}
       <ul className="tasks-container">
         {tasks.length > 0 ?
@@ -99,7 +136,8 @@ const Home = () => {
             description={task.description}
             checked={task.checked}
             handleCheckTask={handleCheckTask}
-            setTaskToDelete={setTaskToDelete} />)
+            setTaskToDelete={setTaskToDelete}
+            setTaskToUpdate={setTaskToUpdate}/>)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
       <div className="check-buttons-container">

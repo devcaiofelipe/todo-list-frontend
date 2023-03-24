@@ -22,15 +22,27 @@
 
 .task-container-button {
   padding: 8px;
-  background-color: #FFE8EC;
-  color: #FF1943;
   border: none;
   border-radius: 3px;
   margin-right: 10px;
 }
-.task-container-button:hover {
-  background-color: #ddafb7;
+
+.confirm-button {
+  background-color: #FFE8EC;
   color: #FF1943;
+}
+
+.confirm-button:hover {
+  background-color: #ddafb7;
+}
+
+.update-button {
+  background-color: #d4e1f8;
+  color: #286ef1;
+}
+
+.update-button:hover {
+  background-color: #a5b6d3;
 }
 
 .task-container-button:active {

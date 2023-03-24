@@ -51,7 +51,7 @@ body.active-modal {
   padding: 5px 7px;
 }
 
-.buttons {
+.buttons-update {
   display: flex;
   margin-top: 10px;
   justify-content: center;
@@ -65,13 +65,6 @@ body.active-modal {
   border: none;
   color: white;
   text-align: center;
-}
-
-.confirm {
-  background-color: #FF1943;
-}
-.confirm:hover {
-  background-color: #860a21;
 }
 
 .cancel {
@@ -98,8 +91,37 @@ body.active-modal {
   justify-content: center;
 }
 
-.modal-icon {
-  height: 100px;
-  width: 100px;
-  color: red;
+.modal-icon-update {
+  height: 20px;
+  width: 20px;
+  color: #86acf1;
+  margin-left: 10px;
+}
+
+.update {
+  background-color: #286ef1;
+}
+
+.update:hover {
+  background-color: #2160d4;
+}
+
+
+.modal-header {
+  display: flex;
+}
+
+.modal-header h2 {
+  color: #2160d4;
+}
+
+.task-update-input {
+  width: 100%;
+  height: 50px;
+  font-size: 18px;
+  border-style: solid;
+  border-color: rgba(192, 190, 190, 0.904);
+  border-width: 2 px;
+  text-indent: 20px;
+  border-radius: 5px;
 }
