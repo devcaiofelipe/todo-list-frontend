@@ -80,7 +80,7 @@ const Home = () => {
   return (
     <div className="container">
       <header>
-        <h1 className="messages">Welcome back, Marcao</h1>
+        <h1 className="messages">Welcome back, Caio</h1>
         <p className="messages">You've got {tasks.length} tasks coming up in the next days.</p>
       </header>
       <div className="handle-task-container">
