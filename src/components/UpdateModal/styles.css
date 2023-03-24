@@ -60,6 +60,7 @@ body.active-modal {
 }
 
 .button {
+  margin-top: 15px;
   padding: 7px 30px;
   border-radius: 2px;
   border: none;
@@ -103,7 +104,7 @@ body.active-modal {
 }
 
 .update:hover {
-  background-color: #2160d4;
+  background-color: #082f77;
 }
 
 

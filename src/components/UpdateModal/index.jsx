@@ -3,11 +3,16 @@ import { HiPencilAlt } from "react-icons/hi";
 import { useState } from "react";
 
 const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask, oldValue }) => {
-  console.log(oldValue);
-  const [newDescription, setNewDescription] = useState('');
+  const [newDescription, setNewDescription] = useState(oldValue);
 
   const handleInputChange = (event) => {
     setNewDescription(event.target.value);
+  }
+
+  const handleKeyPressed = (e) => {
+    if (e.key === 'Enter') {
+      handleUpdateTask(idToUpdate, newDescription)
+    }
   }
 
   return (
@@ -21,7 +26,7 @@ const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask, oldValue }) =>
             </i>
           
         </div>
-        <input type="text" className="task-update-input" value={newDescription ? newDescription : oldValue } onChange={handleInputChange}/>
+        <input type="text" className="task-update-input" placeholder="New task..." value={newDescription} onChange={handleInputChange} onKeyDown={handleKeyPressed}/>
         
         <div className="buttons-update">
           <button onClick={toggleModal} className="button cancel font">
