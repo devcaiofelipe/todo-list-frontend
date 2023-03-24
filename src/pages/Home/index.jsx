@@ -27,6 +27,7 @@ const Home = () => {
   ]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
+  const [someChecked, setSomeChecked] = useState(false);
   const [idToDelete, setIdToDelete] = useState('');
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
@@ -88,6 +89,7 @@ const Home = () => {
   }
 
   const handleCheckTask = (taskId) => {
+    setSomeChecked(true);
     const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
     setTasks(newTasks);
   }
@@ -101,11 +103,22 @@ const Home = () => {
   }
 
   const handleCheckAll = () => {
-    const newTasks = tasks.map((task) => ({
-      ...task,
-      checked: true
-    }))
-    setTasks(newTasks);
+    if (!someChecked) {
+      const newTasks = tasks.map((task) => ({
+        ...task,
+        checked: true
+      }))
+      setTasks(newTasks);
+      setSomeChecked(true);
+    } else {
+      const newTasks = tasks.map((task) => ({
+        ...task,
+        checked: false
+      }))
+      setTasks(newTasks);
+      setSomeChecked(false);
+    }
+    
   }
 
   const handleKeyPressed = (e) => {
@@ -164,7 +177,7 @@ const Home = () => {
       </ul>
       <div className="check-buttons-container">
         <div className="check-buttons">
-          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>Check all</button> : null}
+          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
           {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
