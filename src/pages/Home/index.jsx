@@ -149,7 +149,7 @@ const Home = () => {
         <p className="messages">You've got {tasks.length} tasks coming up in the next days.</p>
       </header>
       <div className="handle-task-container">
-        <input className="add-task-input messages" type="text" placeholder="Add new task..." value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
+        <input className="add-task-input messages" type="text" placeholder="Add new task..." autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
       {deleteModal && <DeleteModal
