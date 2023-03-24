@@ -29,6 +29,7 @@ const Home = () => {
   const [updateModal, setUpdateModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState('');
   const [idToUpdate, setIdToUpdate] = useState('');
+  const [oldValue, setOldValue] = useState('');
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -50,6 +51,8 @@ const Home = () => {
   }
 
   const handleTaskIdToUpdate = (taskId) => {
+    const oldValue = tasks.filter((task) => task.id === taskId)[0];
+    setOldValue(oldValue.description);
     setUpdateModal(!updateModal);
     setIdToUpdate(taskId);
   }
@@ -144,6 +147,7 @@ const Home = () => {
       {updateModal && <UpdateModal
         toggleModal={toggleUpdateModal}
         idToUpdate={idToUpdate}
+        oldValue={oldValue}
         handleUpdateTask={handleUpdateTask}
       />}
       <ul className="tasks-container">
