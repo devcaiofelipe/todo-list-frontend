@@ -21,7 +21,7 @@ const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask, oldValue }) =>
             </i>
           
         </div>
-        <input type="text" className="task-update-input" value={oldValue} onChange={handleInputChange}/>
+        <input type="text" className="task-update-input" value={newDescription ? newDescription : oldValue } onChange={handleInputChange}/>
         
         <div className="buttons-update">
           <button onClick={toggleModal} className="button cancel font">
