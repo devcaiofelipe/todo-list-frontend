@@ -156,21 +156,25 @@ const Home = () => {
         <h1 className="messages">Welcome back, Caio</h1>
         <p className="messages">You've got {tasks.length} tasks coming up in the next days.</p>
       </header>
+
       <div className="handle-task-container">
         <input className="add-task-input messages" type="text" placeholder="Add new task..." autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
+
       {deleteModal && <DeleteModal
         toggleModal={toggleDeleteModal}
         deleteAction={handleDeleteTask}
         taskToDelete={idToDelete}
       />}
+
       {updateModal && <UpdateModal
         toggleModal={toggleUpdateModal}
         idToUpdate={idToUpdate}
         oldValue={oldValue}
         handleUpdateTask={handleUpdateTask}
       />}
+
       <ul className="tasks-container">
         {tasks.length > 0 ?
           tasks.map((task) => <Task key={task.id}
@@ -184,6 +188,7 @@ const Home = () => {
             />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
+
       <div className="check-buttons-container">
         <div className="check-buttons">
           {tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
