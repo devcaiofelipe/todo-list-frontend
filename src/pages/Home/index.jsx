@@ -13,16 +13,19 @@ const Home = () => {
       id: uuidv4(),
       description: 'Estudar javascript',
       checked: false,
+      done: false,
     },
     {
       id: uuidv4(),
       description: 'Estudar python',
       checked: false,
+      done: false,
     },
     {
       id: uuidv4(),
       description: 'Estudar swift',
       checked: false,
+      done: false,
     }
   ]);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -142,6 +145,11 @@ const Home = () => {
     toggleUpdateModal()
   }
 
+  const handleDoneTask = (taskId) => {
+    const newTasks = tasks.map((task) => taskId === task.id ? { ...task, done: !task.done } : task );
+    setTasks(newTasks);
+  }
+
   return (
     <div className="container">
       <header>
@@ -166,12 +174,13 @@ const Home = () => {
       <ul className="tasks-container">
         {tasks.length > 0 ?
           tasks.map((task) => <Task key={task.id}
-            taskId={task.id}
+            task={task}
             description={task.description}
             checked={task.checked}
             handleCheckTask={handleCheckTask}
             handleTaskToDelete={handleTaskToDelete}
             handleTaskIdToUpdate={handleTaskIdToUpdate}
+            handleDoneTask={handleDoneTask}
             />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>

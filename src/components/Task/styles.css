@@ -45,10 +45,13 @@
   background-color: #a5b6d3;
 }
 
-.task-container-button:active {
-  background-color: #b8818b;
-  margin: 6px 10px 2px 10px;
-  padding: 9px;
+.done-button {
+  background-color: #6ECA22;
+  color: #192e09;
+}
+
+.done-button:hover {
+  background-color: #4a920f;
 }
 
 .task-container-checkbox {
