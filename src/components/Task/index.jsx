@@ -13,8 +13,11 @@ const Task = ({
   handleDoneTask }) => {
 
   return (
-    <div className="task-container-border"style={ checked ? { borderStyle: 'solid', borderWidth: '1px', borderColor: '#286ef1', borderRadius: '8px' } : { borderStyle: 'solid', borderWidth: '1px', borderColor: 'white', borderRadius: '8px' } }>
-      <li key={task.id} className="task-container" style={ task.done ? { backgroundColor: '#e8f3df' } : null }>
+    <div className="task-container-border"style={{ borderStyle: 'solid', borderWidth: '1px', borderColor: checked ? '#286ef1' : 'white', borderRadius: '8px' }}>
+      <li key={task.id} className="task-container" style={ { backgroundColor: task.done ? '#e8f3df' : 'white',
+      transition: "all .5s ease",
+      WebkitTransition: "all .5s ease",
+      MozTransition: "all .5s ease" }}>
       <div>
           <input type="checkbox" checked={checked} onChange={() => handleCheckTask(task.id)} className="task-container-checkbox"/>
           <p className="messages">{description}</p>
@@ -31,3 +34,7 @@ const Task = ({
 }
 
 export default Task;
+
+// transition: "all .5s ease",
+//       WebkitTransition: "all .5s ease",
+//       MozTransition: "all .5s ease"
