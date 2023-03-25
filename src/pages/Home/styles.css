@@ -54,10 +54,29 @@ body {
   transition: 0.3s;
 }
 
-.add-task-button, .delete-all-tasks-button {
-  padding: 16px;
+.add-task-button {
+  padding: 13px;
   border-radius: 5px;
   border: none;
+  color: white;
+  font-size: 50px;
+}
+
+.delete-all-tasks-button {
+  height: 40px;
+  width: 200px;
+  border-radius: 5px;
+  border: none;
+  background-color: #FF1943;
+  color: white;
+  font-size: 16px;
+}
+.check-all-tasks-button {
+  height: 40px;
+  width: 200px;
+  border-radius: 5px;
+  border: none;
+  background-color: #286ef1;
   color: white;
   font-size: 16px;
 }
@@ -65,14 +84,16 @@ body {
 .add-task-button {
   margin-left: 15px;
   background-color: #6ECA22;
+  color: white;
+  font-size: 20px;
 }
 
 .add-task-button:hover {
   background-color: #4a920f;
 }
 
-.delete-all-tasks-button {
-  background-color: #FF1943;
+.check-all-tasks-button:hover {
+  background-color: #0f42a1;
 }
 
 .delete-all-tasks-button:hover {

@@ -13,7 +13,7 @@ const Task = ({
   handleDoneTask }) => {
 
   return (
-    <div className="task-container-border"style={ checked ? { borderStyle: 'solid', borderWidth: '1px', borderColor: 'red', borderRadius: '5px' } : null }>
+    <div className="task-container-border"style={ checked ? { borderStyle: 'solid', borderWidth: '1px', borderColor: '#286ef1', borderRadius: '8px' } : { borderStyle: 'solid', borderWidth: '1px', borderColor: 'white', borderRadius: '8px' } }>
       <li key={task.id} className="task-container" style={ task.done ? { backgroundColor: '#e8f3df' } : null }>
       <div>
           <input type="checkbox" checked={checked} onChange={() => handleCheckTask(task.id)} className="task-container-checkbox"/>

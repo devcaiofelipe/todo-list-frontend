@@ -92,7 +92,11 @@ const Home = () => {
   }
 
   const handleCheckTask = (taskId) => {
-    setSomeChecked(true);
+    if (!someChecked) {
+      setSomeChecked(true);
+    } else {
+      setSomeChecked(false);
+    }
     const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
     setTasks(newTasks);
   }
@@ -191,7 +195,7 @@ const Home = () => {
 
       <div className="check-buttons-container">
         <div className="check-buttons">
-          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
+          {tasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
           {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
