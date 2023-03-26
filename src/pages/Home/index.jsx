@@ -35,6 +35,7 @@ const Home = () => {
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
   const [filter, setFilter] = useState('all');
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -44,14 +45,16 @@ const Home = () => {
     setUpdateModal(!updateModal)
   }
 
-  // if (modal) {
-  //   document.body.classList.add('active-modal')
-  // } else {
-  //   document.body.classList.remove('active-modal')
-  // }
-
   const handleFilter = (e) => {
-    setFilter(e.target.value);
+    if (e.target.value === 'done') {
+      const tasksFiltered = tasks.filter(task => task.done)
+      setFilteredTasks(tasksFiltered);
+    } else if (e.target.value === 'in-progress') {
+      const tasksFiltered = tasks.filter(task => !task.done)
+      setFilteredTasks(tasksFiltered);
+    } else {
+      setFilteredTasks(tasks);
+    }
   }
 
   const handleTaskToDelete = (taskId) => {
@@ -84,10 +87,21 @@ const Home = () => {
       return [...prevState, {
         id: uuidv4(),
         description: task,
-        checked: false
+        checked: false,
+        done: false,
       }]
     });
     setTask('');
+    setFilteredTasks(prevState => {
+      return [
+        ...prevState, {
+          id: uuidv4(),
+          description: task,
+          checked: false,
+          done: false,
+        }
+      ]
+    })
   }
 
   const handleDeleteTask = (taskId) => {
@@ -104,6 +118,7 @@ const Home = () => {
     }
     const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
     setTasks(newTasks);
+    setFilteredTasks(newTasks);
   }
 
   const handleDeleteAll = () => {
@@ -121,6 +136,7 @@ const Home = () => {
         checked: true
       }))
       setTasks(newTasks);
+      setFilteredTasks(newTasks);
       setSomeChecked(true);
     } else {
       const newTasks = tasks.map((task) => ({
@@ -128,6 +144,7 @@ const Home = () => {
         checked: false
       }))
       setTasks(newTasks);
+      setFilteredTasks(newTasks);
       setSomeChecked(false);
     }
     
@@ -157,6 +174,7 @@ const Home = () => {
   const handleDoneTask = (taskId) => {
     const newTasks = tasks.map((task) => taskId === task.id ? { ...task, done: !task.done } : task );
     setTasks(newTasks);
+    setFilteredTasks(newTasks);
   }
 
   return (
@@ -194,8 +212,8 @@ const Home = () => {
       />}
 
       <ul className="tasks-container">
-        {tasks.length > 0 ?
-          tasks.map((task) => <Task key={task.id}
+        {filteredTasks.length > 0 ?
+          filteredTasks.map((task) => <Task key={task.id}
             task={task}
             description={task.description}
             checked={task.checked}
@@ -209,8 +227,8 @@ const Home = () => {
 
       <div className="check-buttons-container">
         <div className="check-buttons">
-          {tasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
-          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
+          {filteredTasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
+          {filteredTasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
 
