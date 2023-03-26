@@ -166,6 +166,14 @@ const Home = () => {
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
 
+      <div className="status-container">
+        <select className="status-select">
+          <option className="status-option" value="done">Done</option>
+          <option className="status-option" value="in-progress" selected>In Progress</option>
+        </select>
+      </div>
+      
+
       {deleteModal && <DeleteModal
         toggleModal={toggleDeleteModal}
         deleteAction={handleDeleteTask}
