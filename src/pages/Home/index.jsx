@@ -34,6 +34,7 @@ const Home = () => {
   const [idToDelete, setIdToDelete] = useState('');
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
+  const [filter, setFilter] = useState('all');
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -48,6 +49,10 @@ const Home = () => {
   // } else {
   //   document.body.classList.remove('active-modal')
   // }
+
+  const handleFilter = (e) => {
+    setFilter(e.target.value);
+  }
 
   const handleTaskToDelete = (taskId) => {
     setDeleteModal(!deleteModal);
@@ -167,9 +172,10 @@ const Home = () => {
       </div>
 
       <div className="status-container">
-        <select className="status-select">
+        <select className="status-select" defaultValue={filter} onChange={handleFilter}>
+          <option className="status-option" value="all">All</option>
           <option className="status-option" value="done">Done</option>
-          <option className="status-option" value="in-progress" selected>In Progress</option>
+          <option className="status-option" value="in-progress">In Progress</option>
         </select>
       </div>
       
