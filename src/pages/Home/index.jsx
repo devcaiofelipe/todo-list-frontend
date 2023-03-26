@@ -34,7 +34,6 @@ const Home = () => {
   const [idToDelete, setIdToDelete] = useState('');
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
-  const [filter, setFilter] = useState('all');
   const [filteredTasks, setFilteredTasks] = useState(tasks);
 
   const toggleDeleteModal = () => {
@@ -190,7 +189,7 @@ const Home = () => {
       </div>
 
       <div className="status-container">
-        <select className="status-select" defaultValue={filter} onChange={handleFilter}>
+        <select className="status-select" defaultValue={'all'} onChange={handleFilter}>
           <option className="status-option" value="all">All</option>
           <option className="status-option" value="done">Done</option>
           <option className="status-option" value="in-progress">In Progress</option>
