@@ -24,7 +24,7 @@ body.active-modal {
 }
 
 .modal-content {
-  position: relative;
+  position: absolute;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -41,7 +41,7 @@ body.active-modal {
 
 @keyframes animatetop {
   from { top:-300px; opacity:0 }
-  to { top: 200; opacity:1 }
+  to { top: 200px; opacity:1 }
 }
 
 .close-modal {
