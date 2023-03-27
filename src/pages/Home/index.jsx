@@ -35,7 +35,6 @@ const Home = () => {
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
   const [filterChoise, setFilterChoise] = useState('all');
-  // const [filteredTasks, setFilteredTasks] = useState(tasks);
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -46,15 +45,6 @@ const Home = () => {
   }
 
   const handleFilter = (e) => {
-    // if (e.target.value === 'done') {
-    //   const tasksFiltered = tasks.filter(task => task.done)
-    //   setFilteredTasks(tasksFiltered);
-    // } else if (e.target.value === 'in-progress') {
-    //   const tasksFiltered = tasks.filter(task => !task.done)
-    //   setFilteredTasks(tasksFiltered);
-    // } else {
-    //   setFilteredTasks(tasks);
-    // }
     setFilterChoise(e.target.value);
   }
 
@@ -92,17 +82,8 @@ const Home = () => {
         status: 'in-progress',
       }]
     });
+    setFilterChoise('all')
     setTask('');
-    // setFilteredTasks(prevState => {
-    //   return [
-    //     ...prevState, {
-    //       id: uuidv4(),
-    //       description: task,
-    //       checked: false,
-    //       done: false,
-    //     }
-    //   ]
-    // })
   }
 
   const handleDeleteTask = (taskId) => {
@@ -123,7 +104,6 @@ const Home = () => {
     }
     const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
     setTasks(newTasks);
-    // setFilteredTasks(newTasks);
   }
 
   const handleDeleteAll = () => {
@@ -141,7 +121,6 @@ const Home = () => {
         checked: true
       }))
       setTasks(newTasks);
-      // setFilteredTasks(newTasks);
       setSomeChecked(true);
     } else {
       const newTasks = tasks.map((task) => ({
@@ -149,7 +128,6 @@ const Home = () => {
         checked: false
       }))
       setTasks(newTasks);
-      // setFilteredTasks(newTasks);
       setSomeChecked(false);
     }
     
@@ -179,7 +157,6 @@ const Home = () => {
   const handleDoneTask = (taskId) => {
     const newTasks = tasks.map((task) => taskId === task.id ? { ...task, status: task.status === 'done' ? 'in-progress' : 'done' } : task );
     setTasks(newTasks);
-    // setFilteredTasks(newTasks);
   }
 
   const validateFilterLength = (tasks) => {
@@ -203,7 +180,7 @@ const Home = () => {
       </div>
 
       <div className="status-container">
-        <select className="status-select" defaultValue={'all'} onChange={handleFilter}>
+        <select className="status-select" defaultValue={'all'} value={filterChoise} onChange={handleFilter}>
           <option className="status-option" value="all">All</option>
           <option className="status-option" value="done">Done</option>
           <option className="status-option" value="in-progress">In Progress</option>
