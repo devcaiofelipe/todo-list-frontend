@@ -14,7 +14,7 @@ const Task = ({
 
   return (
     <div className="task-container-border" style={{ borderStyle: 'solid', borderWidth: '1px', borderColor: checked ? '#286ef1' : 'white', borderRadius: '8px' }}>
-      <li key={task.id} className="task-container" style={ { backgroundColor: task.done ? '#e8f3df' : 'white',
+      <li key={task.id} className="task-container" style={ { backgroundColor: task.status === 'done' ? '#e8f3df' : 'white',
       transition: "all .5s ease",
       WebkitTransition: "all .5s ease",
       MozTransition: "all .5s ease" }}>
@@ -23,7 +23,7 @@ const Task = ({
         <p className="messages">{description}</p>
       </div>
       <div>
-        <button className="task-container-button done-button" onClick={() => handleDoneTask(task.id)}>{ task.done ? <MdRemoveDone/> : <MdDone/>}</button>
+        <button className="task-container-button done-button" onClick={() => handleDoneTask(task.id)}>{ task.status === 'done' ? <MdRemoveDone/> : <MdDone/>}</button>
         <button className="task-container-button update-button" onClick={() => handleTaskIdToUpdate(task.id)}><BsPencil/></button>
         <button className="task-container-button confirm-button" onClick={() => handleTaskToDelete(task.id)}><BsTrash/></button>
       </div>

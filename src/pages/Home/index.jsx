@@ -13,19 +13,19 @@ const Home = () => {
       id: uuidv4(),
       description: 'Estudar javascript',
       checked: false,
-      done: false,
+      status: 'in-progress',
     },
     {
       id: uuidv4(),
       description: 'Estudar python',
       checked: false,
-      done: false,
+      status: 'in-progress',
     },
     {
       id: uuidv4(),
       description: 'Estudar swift',
       checked: false,
-      done: false,
+      status: 'in-progress',
     }
   ]);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -34,7 +34,8 @@ const Home = () => {
   const [idToDelete, setIdToDelete] = useState('');
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
-  const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const [filterChoise, setFilterChoise] = useState('all');
+  // const [filteredTasks, setFilteredTasks] = useState(tasks);
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -45,15 +46,16 @@ const Home = () => {
   }
 
   const handleFilter = (e) => {
-    if (e.target.value === 'done') {
-      const tasksFiltered = tasks.filter(task => task.done)
-      setFilteredTasks(tasksFiltered);
-    } else if (e.target.value === 'in-progress') {
-      const tasksFiltered = tasks.filter(task => !task.done)
-      setFilteredTasks(tasksFiltered);
-    } else {
-      setFilteredTasks(tasks);
-    }
+    // if (e.target.value === 'done') {
+    //   const tasksFiltered = tasks.filter(task => task.done)
+    //   setFilteredTasks(tasksFiltered);
+    // } else if (e.target.value === 'in-progress') {
+    //   const tasksFiltered = tasks.filter(task => !task.done)
+    //   setFilteredTasks(tasksFiltered);
+    // } else {
+    //   setFilteredTasks(tasks);
+    // }
+    setFilterChoise(e.target.value);
   }
 
   const handleTaskToDelete = (taskId) => {
@@ -87,20 +89,20 @@ const Home = () => {
         id: uuidv4(),
         description: task,
         checked: false,
-        done: false,
+        status: 'in-progress',
       }]
     });
     setTask('');
-    setFilteredTasks(prevState => {
-      return [
-        ...prevState, {
-          id: uuidv4(),
-          description: task,
-          checked: false,
-          done: false,
-        }
-      ]
-    })
+    // setFilteredTasks(prevState => {
+    //   return [
+    //     ...prevState, {
+    //       id: uuidv4(),
+    //       description: task,
+    //       checked: false,
+    //       done: false,
+    //     }
+    //   ]
+    // })
   }
 
   const handleDeleteTask = (taskId) => {
@@ -113,11 +115,15 @@ const Home = () => {
     if (!someChecked) {
       setSomeChecked(true);
     } else {
-      setSomeChecked(false);
+      const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
+      const totalChecked = newTasks.filter((task) => task.checked).length
+      if (!totalChecked) {
+        setSomeChecked(false);
+      }
     }
     const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
     setTasks(newTasks);
-    setFilteredTasks(newTasks);
+    // setFilteredTasks(newTasks);
   }
 
   const handleDeleteAll = () => {
@@ -135,7 +141,7 @@ const Home = () => {
         checked: true
       }))
       setTasks(newTasks);
-      setFilteredTasks(newTasks);
+      // setFilteredTasks(newTasks);
       setSomeChecked(true);
     } else {
       const newTasks = tasks.map((task) => ({
@@ -143,7 +149,7 @@ const Home = () => {
         checked: false
       }))
       setTasks(newTasks);
-      setFilteredTasks(newTasks);
+      // setFilteredTasks(newTasks);
       setSomeChecked(false);
     }
     
@@ -171,9 +177,17 @@ const Home = () => {
   }
 
   const handleDoneTask = (taskId) => {
-    const newTasks = tasks.map((task) => taskId === task.id ? { ...task, done: !task.done } : task );
+    const newTasks = tasks.map((task) => taskId === task.id ? { ...task, status: task.status === 'done' ? 'in-progress' : 'done' } : task );
     setTasks(newTasks);
-    setFilteredTasks(newTasks);
+    // setFilteredTasks(newTasks);
+  }
+
+  const validateFilterLength = (tasks) => {
+    const resultLength = tasks.filter((task) => {
+      if (filterChoise === 'all') return task;
+      return task.status === filterChoise;
+    }).length;
+    return resultLength > 0;
   }
 
   return (
@@ -211,23 +225,28 @@ const Home = () => {
       />}
 
       <ul className="tasks-container">
-        {filteredTasks.length > 0 ?
-          filteredTasks.map((task) => <Task key={task.id}
-            task={task}
-            description={task.description}
-            checked={task.checked}
-            handleCheckTask={handleCheckTask}
-            handleTaskToDelete={handleTaskToDelete}
-            handleTaskIdToUpdate={handleTaskIdToUpdate}
-            handleDoneTask={handleDoneTask}
-            />)
+        {validateFilterLength(tasks) ?
+          tasks
+            .filter((task) => {
+              if (filterChoise === 'all') return task;
+              return task.status === filterChoise;
+            })
+            .map((task) => <Task key={task.id}
+              task={task}
+              description={task.description}
+              checked={task.checked}
+              handleCheckTask={handleCheckTask}
+              handleTaskToDelete={handleTaskToDelete}
+              handleTaskIdToUpdate={handleTaskIdToUpdate}
+              handleDoneTask={handleDoneTask}
+          />)
           : <p className="no-tasks messages">There are no tasks</p>}
       </ul>
 
       <div className="check-buttons-container">
         <div className="check-buttons">
-          {filteredTasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
-          {filteredTasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
+          {tasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
+          {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
 
