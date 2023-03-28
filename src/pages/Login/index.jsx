@@ -1,8 +1,30 @@
 import './styles.css'
+import { useState } from 'react';
 import { RiTodoLine } from "react-icons/ri";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
+  let history = useHistory();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [wrongCredentials, setWrongCredentials] = useState(false);
+
+  const handleSubmit = () => {
+    if (email === 'email@gmail.com' && password === 'senha123') {
+      history.push("/home");
+    } else {
+      setWrongCredentials(true);
+    }
+  }
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
   return (
     <div className="container">
       <header className="header-login">
@@ -12,12 +34,25 @@ const Login = () => {
       <div className="login-container">
         <div className="login-content">
           <p className="login-title">Login</p>
-          <p className="login-info">Type your e-mail and password below to sign-in at To Do List</p>
-          <form action="#" className="login-form">
-            <input type="text" className="form-input" placeholder="E-mail"/>
-            <input type="password" className="form-input" placeholder="Password"/>
+          <p className="login-info">Type your e-mail and password below to sign in at To Do List</p>
+          <form action="#" className="login-form" onSubmit={handleSubmit}>
+            <label htmlFor="email-input" className="label" style={{
+              color: wrongCredentials ? '#FF0839' : '#64646B',
+            }}>E-mail</label>
+            <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={{
+              border: wrongCredentials ? '2px solid #FF0839' : '2px solid rgb(177, 177, 177)'
+            }}/>
+            <label htmlFor="password-input" className="label" style={{
+              color: wrongCredentials ? '#FF0839' : '#64646B',
+            }}> Password</label>
+            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={{
+              border: wrongCredentials ? '2px solid #FF0839' : '2px solid rgb(177, 177, 177)'
+            }}/>
+            { wrongCredentials && <span className="error-message">E-mail or password invalid</span>}
+            <button type="submit" className="signin-button" style={{
+              backgroundColor: email && password ? 'rgb(195, 195, 201)': 'rgb(211, 210, 210)'
+            }} disabled={!email || !password}>Sign in</button>
           </form>
-          <button type="submit" className="signin-button">Sign in</button>
         </div>
       </div>
     </div>

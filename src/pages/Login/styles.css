@@ -5,6 +5,11 @@
   flex-direction: column;
 }
 
+.label {
+  font-size: 12px;
+  height: 1px;
+}
+
 .header-login {
   display: flex;
   flex-direction: row;
@@ -63,7 +68,7 @@
 }
 
 .form-input {
-  height: 30%;
+  height: 25%;
   text-indent: 15px;
   border-radius: 10px;
   border: 2px solid rgb(177, 177, 177);
@@ -76,10 +81,16 @@
 }
 
 .signin-button {
-  height: 30%;
+  margin-top: 50px;
+  height: 100px;
   font-family: 'Cabin', sans-serif;
   font-size: 16px;
   background-color: rgb(195, 195, 201);
   border-radius: 10px;
   border: none;
+}
+
+.error-message {
+  font-size: 15px;
+  color: red;
 }
