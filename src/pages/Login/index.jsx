@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     setLoginLoad(true)
-    setTimeout(async () => {
+    setTimeout(() => {
       if (email === 'email@gmail.com' && password === 'senha123') {
         history.push("/home");
       } else {
