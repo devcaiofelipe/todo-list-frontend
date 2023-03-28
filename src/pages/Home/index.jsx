@@ -170,8 +170,8 @@ const Home = () => {
   return (
     <div className="container">
       <header>
-        <h1 className="messages">Welcome back, Caio</h1>
-        <p className="messages">You've got {tasks.length} tasks coming up in the next days.</p>
+        <h1 className="messages color">Welcome back, Caio</h1>
+        <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
       </header>
 
       <div className="handle-task-container">

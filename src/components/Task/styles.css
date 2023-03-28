@@ -36,12 +36,12 @@
 }
 
 .update-button {
-  background-color: #d4e1f8;
+  background-color: #d2d3f3;
   color: #286ef1;
 }
 
 .update-button:hover {
-  background-color: #a5b6d3;
+  background-color: #abacd1;
 }
 
 .done-button {
@@ -58,5 +58,5 @@
   height: 14px;
   margin-left: 10px;
   margin-right: 20px;
-  accent-color: #286ef1;
+  accent-color: #444791;
 }
