@@ -7,14 +7,20 @@ const Login = () => {
   let history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginLoad, setLoginLoad] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
 
   const handleSubmit = () => {
-    if (email === 'email@gmail.com' && password === 'senha123') {
-      history.push("/home");
-    } else {
-      setWrongCredentials(true);
-    }
+    setLoginLoad(true)
+    setTimeout(async () => {
+      if (email === 'email@gmail.com' && password === 'senha123') {
+        history.push("/home");
+      } else {
+        setWrongCredentials(true);
+      }
+      setLoginLoad(false);
+    }, 1000)
+    
   }
 
   const handleEmail = (e) => {
@@ -52,7 +58,7 @@ const Login = () => {
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
-            } : null } disabled={!email || !password}>Sign in</button>
+            } : null } disabled={!email || !password}>{ loginLoad ? <span class="loader"></span> : 'Sign in' }</button>
           </form>
         </div>
       </div>
