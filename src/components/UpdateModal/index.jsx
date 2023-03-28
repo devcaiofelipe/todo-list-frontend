@@ -26,6 +26,7 @@ const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask, oldValue }) =>
             </i>
           
         </div>
+
         <input type="text" className="task-update-input" autoFocus placeholder="New task..." value={newDescription} onChange={handleInputChange} onKeyDown={handleKeyPressed}/>
         
         <div className="buttons-update">
