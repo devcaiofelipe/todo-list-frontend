@@ -217,7 +217,7 @@ const Home = () => {
               handleTaskIdToUpdate={handleTaskIdToUpdate}
               handleDoneTask={handleDoneTask}
           />)
-          : <p className="no-tasks messages">There are no tasks</p>}
+          : <p className="no-tasks messages color">There are no tasks</p>}
       </ul>
 
       <div className="check-buttons-container">
