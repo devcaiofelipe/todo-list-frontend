@@ -18,7 +18,7 @@
   align-items: center;
   height: 40%;
   width: 100%;
-  background-color: rgb(100, 100, 107);
+  background-color: #444791;
   color: white;
   font-size: 60px;
   font-family: 'Cabin', sans-serif;
@@ -50,13 +50,13 @@
 .login-title {
   font-size: 30px;
   font-family: 'Cabin', sans-serif;
-  color: rgb(100, 100, 107)
+  color: #232555
 }
 
 .login-info {
   font-size: 19px;
   font-family: 'Cabin', sans-serif;
-  color: rgb(100, 100, 107)
+  color: #232555
 }
 
 .login-form {
@@ -75,7 +75,7 @@
 }
 
 .form-input:focus {
-  border: 2px solid rgb(73, 72, 72);
+  border: 2px solid #232555;
   outline: none;
   transition: all 0.2s ease;
 }
@@ -85,9 +85,14 @@
   height: 100px;
   font-family: 'Cabin', sans-serif;
   font-size: 16px;
-  background-color: rgb(195, 195, 201);
+  background-color: #444791;
   border-radius: 10px;
   border: none;
+  color: white;
+}
+
+.signin-button:hover {
+  background-color: #36397e;
 }
 
 .error-message {

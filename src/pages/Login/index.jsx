@@ -37,20 +37,21 @@ const Login = () => {
           <p className="login-info">Type your e-mail and password below to sign in at To Do List</p>
           <form action="#" className="login-form" onSubmit={handleSubmit}>
             <label htmlFor="email-input" className="label" style={{
-              color: wrongCredentials ? '#FF0839' : '#64646B',
+              color: wrongCredentials ? '#FF0839' : '#232555',
             }}>E-mail</label>
             <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={{
-              border: wrongCredentials ? '2px solid #FF0839' : '2px solid rgb(177, 177, 177)'
+              border: wrongCredentials ? '2px solid #FF0839' : '2px solid #232555'
             }}/>
             <label htmlFor="password-input" className="label" style={{
-              color: wrongCredentials ? '#FF0839' : '#64646B',
+              color: wrongCredentials ? '#FF0839' : '#232555',
             }}> Password</label>
             <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={{
-              border: wrongCredentials ? '2px solid #FF0839' : '2px solid rgb(177, 177, 177)'
+              border: wrongCredentials ? '2px solid #FF0839' : '2px solid #232555'
             }}/>
             { wrongCredentials && <span className="error-message">E-mail or password invalid</span>}
             <button type="submit" className="signin-button" style={{
-              backgroundColor: email && password ? 'rgb(195, 195, 201)': 'rgb(211, 210, 210)'
+              backgroundColor: email && password ? '#444791': 'rgb(211, 210, 210)',
+              color: email && password ? 'white' : '#E8EAE7'
             }} disabled={!email || !password}>Sign in</button>
           </form>
         </div>
