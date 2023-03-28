@@ -39,20 +39,20 @@ const Login = () => {
             <label htmlFor="email-input" className="label" style={{
               color: wrongCredentials ? '#FF0839' : '#232555',
             }}>E-mail</label>
-            <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={{
-              border: wrongCredentials ? '2px solid #FF0839' : '2px solid #232555'
-            }}/>
+            <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={wrongCredentials ? {
+              border: '2px solid #FF0839'
+            } : null }/>
             <label htmlFor="password-input" className="label" style={{
               color: wrongCredentials ? '#FF0839' : '#232555',
             }}> Password</label>
-            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={{
-              border: wrongCredentials ? '2px solid #FF0839' : '2px solid #232555'
-            }}/>
+            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
+              border: '2px solid #FF0839'
+            } : null }/>
             { wrongCredentials && <span className="error-message">E-mail or password invalid</span>}
-            <button type="submit" className="signin-button" style={{
-              backgroundColor: email && password ? '#444791': 'rgb(211, 210, 210)',
-              color: email && password ? 'white' : '#E8EAE7'
-            }} disabled={!email || !password}>Sign in</button>
+            <button type="submit" className="signin-button" style={!email || !password ? {
+              backgroundColor: 'rgb(177, 177, 177)',
+              color: 'black',
+            } : null } disabled={!email || !password}>Sign in</button>
           </form>
         </div>
       </div>
