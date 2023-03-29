@@ -2,6 +2,23 @@ import './styles.css'
 import { useState } from 'react';
 import { RiTodoLine } from "react-icons/ri";
 import { useHistory } from "react-router-dom";
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyASPkk9JblFzIsrXehaM5AI6sLtb7ALpI0",
+  authDomain: "todo-list-9a02b.firebaseapp.com",
+  projectId: "todo-list-9a02b",
+  storageBucket: "todo-list-9a02b.appspot.com",
+  messagingSenderId: "748062136431",
+  appId: "1:748062136431:web:575e228878294b3c1f159a",
+  measurementId: "G-YZ55JBV49Y"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app); 
 
 const Login = () => {
   let history = useHistory();
@@ -12,15 +29,18 @@ const Login = () => {
 
   const handleSubmit = () => {
     setLoginLoad(true)
-    setTimeout(() => {
-      if (email === 'email@gmail.com' && password === 'senha123') {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
         history.push("/home");
-      } else {
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('error1', errorCode)
+        console.log('error2', errorMessage)
         setWrongCredentials(true);
-      }
+      });
       setLoginLoad(false);
-    }, 1000)
-    
   }
 
   const handleEmail = (e) => {
