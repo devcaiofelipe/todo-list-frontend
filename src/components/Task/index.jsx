@@ -18,8 +18,8 @@ const Task = ({
         transition: "all .5s ease",
         WebkitTransition: "all .5s ease",
         MozTransition: "all .5s ease" }}>
+        <input type="checkbox" checked={checked} onChange={() => handleCheckTask(task.id)} className="task-container-checkbox"/>
         <div className="task-start">
-          <input type="checkbox" checked={checked} onChange={() => handleCheckTask(task.id)} className="task-container-checkbox"/>
           <p className="task-description messages">{description}</p>
         </div>
         <div className="task-options-buttons">

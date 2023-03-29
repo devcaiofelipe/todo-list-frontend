@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { RiTodoLine } from "react-icons/ri";
 import { useHistory } from "react-router-dom";
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
@@ -33,6 +33,12 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const token = userCredential.accessToken;
       localStorage.setItem('token', token);
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const newToken = user.accessToken;
+          localStorage.setItem('token', newToken);
+        }
+      });
       history.push("/home");
     } catch (error) {
       console.error(error);
