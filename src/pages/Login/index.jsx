@@ -27,20 +27,19 @@ const Login = () => {
   const [loginLoad, setLoginLoad] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoginLoad(true)
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        history.push("/home");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('error1', errorCode)
-        console.log('error2', errorMessage)
-        setWrongCredentials(true);
-      });
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const token = userCredential.accessToken;
+      localStorage.setItem('token', token);
+      history.push("/home");
+    } catch (error) {
+      console.error(error);
+      setWrongCredentials(true);
+    } finally {
       setLoginLoad(false);
+    } 
   }
 
   const handleEmail = (e) => {
@@ -78,7 +77,7 @@ const Login = () => {
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
-            } : null } disabled={!email || !password}>{ loginLoad ? <span class="loader"></span> : 'Sign in' }</button>
+            } : null } disabled={!email || !password}>{ loginLoad ? <span className="loader"></span> : 'Sign in' }</button>
           </form>
         </div>
       </div>
