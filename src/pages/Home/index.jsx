@@ -126,11 +126,14 @@ const Home = () => {
   }
 
   const handleDeleteAll = () => {
-    const newTasks = tasks.filter((task) => !task.checked);
-    if (newTasks.length === tasks.length) {
-      alert('There is no task checked');
-    }
-    setTasks(newTasks);
+    const currentUser = localStorage.getItem('userId')
+    const db = getDatabase(firebase);
+    tasks.forEach((task) => {
+      if (task.checked) {
+        remove(ref(db, `tasks/${currentUser}/${task.id}`))
+      }
+    })
+    getAllTasks();
   }
 
   const handleCheckAll = () => {
