@@ -37,7 +37,6 @@ const Home = () => {
           checked: snapshot.val()[key].checked,
           status: snapshot.val()[key].status,
         }))
-        console.log('normalizedTasks', normalizedTasks);
         setTasks(normalizedTasks);
       } else {
         console.log("No data available");
@@ -78,44 +77,6 @@ const Home = () => {
   const handleInputChange = (event) => {
     setTask(event.target.value);
   }
-
-  // const handleAddTask = () => {
-  // const dbRef = ref(getDatabase(firebase));
-  // get(child(dbRef, `tasks/uuid-que-inventei-3`)).then((snapshot) => {
-  // if (snapshot.exists()) {
-  //   console.log('VALOOOR', snapshot.val());
-  // } else {
-  //   console.log("No data available");
-  // }
-  // }).catch((error) => {
-  //   console.error(error);
-  // });
-
-  //   criar dados
-  //   const db = getDatabase(firebase);
-  //   const taskListRef = ref(db, 'tasks/uuid-que-inventei-3');
-  //   const newTaskRef = push(taskListRef);
-  //   set(newTaskRef, {
-  //     taskId: 'uuid2',
-  //     description: 'desc2',
-  //     checked: 'true'
-  //   });
-  //   const isValid = validateInput(task);
-  //   if (!isValid) {
-  //     alert('You must type anything');
-  //     return;
-  //   }
-  //   setTasks(prevState => {
-  //     return [...prevState, {
-  //       id: uuidv4(),
-  //       description: task,
-  //       checked: false,
-  //       status: 'in-progress',
-  //     }]
-  //   });
-  //   setFilterChoise('all')
-  //   setTask('');
-  // }
 
   const handleAddTask = () => {
     const isValid = validateInput(task);
@@ -201,7 +162,6 @@ const Home = () => {
     const userId = auth.currentUser.uid;
     const db = getDatabase(firebase);
     const task = tasks.filter((task) => task.id === taskId)[0];
-    console.log('task', task)
     const newTask = { ...task, description: newDescription }
     const updates = {
       [`tasks/${userId}/${taskId}`]: newTask

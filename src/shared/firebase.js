@@ -12,7 +12,6 @@ const firebaseConfig = {
   databaseUrl: process.env.REACT_APP_DATABASE_URL
 };
 
-console.log(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 
 export default app;
