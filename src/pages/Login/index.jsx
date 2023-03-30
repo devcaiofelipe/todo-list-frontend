@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { RiTodoLine } from "react-icons/ri";
 import { useHistory } from "react-router-dom";
 import firebase from '../../shared/firebase';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 
 const auth = getAuth(firebase); 
