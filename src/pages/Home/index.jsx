@@ -6,7 +6,7 @@ import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from "react-icons/vsc";
 import firebase from '../../shared/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 
 const Home = () => {
@@ -26,14 +26,12 @@ const Home = () => {
 
   const getAllTasks = () => {
     const auth = getAuth();
-    let userId;
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userId = user.uid;
-      }
-    });
+    const userId = auth.currentUser?.uid;
     const dbRef = ref(getDatabase(firebase));
-    get(child(dbRef, `tasks/${userId}`)).then((snapshot) => {
+    
+    const currentUser = userId ? userId : localStorage.getItem('userId')
+    localStorage.setItem('userId', userId);
+    get(child(dbRef, `tasks/${currentUser}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const keys = Object.keys(snapshot.val())
         const normalizedTasks = keys.map((key) => ({
@@ -89,10 +87,9 @@ const Home = () => {
       alert('You must type anything');
       return;
     }
-    const auth = getAuth(firebase);
-    const userId = auth.currentUser.uid;
+    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
-    const taskListRef = ref(db, `tasks/${userId}`);
+    const taskListRef = ref(db, `tasks/${currentUser}`);
     const newTaskRef = push(taskListRef);
     set(newTaskRef, {
       description: task,
@@ -107,11 +104,10 @@ const Home = () => {
 
 
   const handleDeleteTask = (taskId) => {
-    const auth = getAuth(firebase);
-    const userId = auth.currentUser.uid;
+    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     toggleDeleteModal()
-    remove(ref(db, `tasks/${userId}/${taskId}`))
+    remove(ref(db, `tasks/${currentUser}/${taskId}`))
     getAllTasks();
   }
 
@@ -163,13 +159,12 @@ const Home = () => {
   }
 
   const handleUpdateTask = (taskId, newDescription) => {
-    const auth = getAuth(firebase);
-    const userId = auth.currentUser.uid;
+    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     const task = tasks.filter((task) => task.id === taskId)[0];
     const newTask = { ...task, description: newDescription }
     const updates = {
-      [`tasks/${userId}/${taskId}`]: newTask
+      [`tasks/${currentUser}/${taskId}`]: newTask
     };
     update(ref(db), updates);
     getAllTasks();
