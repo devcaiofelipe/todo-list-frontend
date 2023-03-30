@@ -6,7 +6,7 @@ import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from "react-icons/vsc";
 import firebase from '../../shared/firebase';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 
 const Home = () => {
@@ -26,7 +26,12 @@ const Home = () => {
 
   const getAllTasks = () => {
     const auth = getAuth();
-    const userId = auth.currentUser.uid;
+    let userId;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userId = user.uid;
+      }
+    });
     const dbRef = ref(getDatabase(firebase));
     get(child(dbRef, `tasks/${userId}`)).then((snapshot) => {
       if (snapshot.exists()) {

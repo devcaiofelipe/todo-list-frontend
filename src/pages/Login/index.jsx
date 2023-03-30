@@ -21,12 +21,6 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const token = userCredential.accessToken;
       localStorage.setItem('token', token);
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const newToken = user.accessToken;
-          localStorage.setItem('token', newToken);
-        }
-      });
       history.push("/home");
     } catch (error) {
       console.error(error);
