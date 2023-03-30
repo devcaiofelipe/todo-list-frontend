@@ -1,7 +1,9 @@
 import './styles.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RiTodoLine } from "react-icons/ri";
-import { useHistory } from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
 import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -9,26 +11,36 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 const auth = getAuth(firebase); 
 
 const Login = () => {
-  let history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginLoad, setLoginLoad] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
+  const [isSigned, setIsSigned] = useState(false);
+  const navigation = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoginLoad(true)
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const token = userCredential.accessToken;
+      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
       localStorage.setItem('token', token);
-      history.push("/home");
+      setIsSigned(true);
     } catch (error) {
       console.error(error);
       setWrongCredentials(true);
+      setIsSigned(false);
     } finally {
       setLoginLoad(false);
     } 
   }
+
+  useEffect(() => {
+    if (isSigned === true) {
+      navigation('home')
+    }
+  }, [isSigned, navigation])
 
   const handleEmail = (e) => {
     setEmail(e.target.value);

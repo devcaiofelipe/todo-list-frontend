@@ -1,28 +1,34 @@
-// import * as dotenv from 'dotenv'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-
-
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-// dotenv.config()
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login/>,
+  },
+  {
+    path: "/home",
+    element: <Home/>,
+  },
+]);
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//   <React.StrictMode>
-//     <Home />
-//   </React.StrictMode>
-// );
+
 root.render(
-  <BrowserRouter>
-    <Switch>
-        <Route exact path="/" component={Login}/>
-        <Route exact path="/home" component={Home}/>
-    </Switch>
-  </BrowserRouter>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
