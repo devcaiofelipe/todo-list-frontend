@@ -1,33 +1,17 @@
 import './styles.css'
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect } from 'react';
+// import { v4 as uuidv4 } from 'uuid';
 import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from "react-icons/vsc";
+import firebase from '../../shared/firebase';
+import { getAuth } from 'firebase/auth';
+import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 
 const Home = () => {
   const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState([
-    {
-      id: uuidv4(),
-      description: 'Estudar javascript',
-      checked: false,
-      status: 'in-progress',
-    },
-    {
-      id: uuidv4(),
-      description: 'Estudar python',
-      checked: false,
-      status: 'in-progress',
-    },
-    {
-      id: uuidv4(),
-      description: 'Estudar swift',
-      checked: false,
-      status: 'in-progress',
-    }
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [someChecked, setSomeChecked] = useState(false);
@@ -35,6 +19,33 @@ const Home = () => {
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
   const [filterChoise, setFilterChoise] = useState('all');
+
+  useEffect(() => {
+    getAllTasks()
+  }, [])
+
+  const getAllTasks = () => {
+    const auth = getAuth();
+    const userId = auth.currentUser.uid;
+    const dbRef = ref(getDatabase(firebase));
+    get(child(dbRef, `tasks/${userId}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const keys = Object.keys(snapshot.val())
+        const normalizedTasks = keys.map((key) => ({
+          id: key,
+          description: snapshot.val()[key].description,
+          checked: snapshot.val()[key].checked,
+          status: snapshot.val()[key].status,
+        }))
+        console.log('normalizedTasks', normalizedTasks);
+        setTasks(normalizedTasks);
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
 
   const toggleDeleteModal = () => {
     setDeleteModal(!deleteModal)
@@ -68,28 +79,74 @@ const Home = () => {
     setTask(event.target.value);
   }
 
+  // const handleAddTask = () => {
+  // const dbRef = ref(getDatabase(firebase));
+  // get(child(dbRef, `tasks/uuid-que-inventei-3`)).then((snapshot) => {
+  // if (snapshot.exists()) {
+  //   console.log('VALOOOR', snapshot.val());
+  // } else {
+  //   console.log("No data available");
+  // }
+  // }).catch((error) => {
+  //   console.error(error);
+  // });
+
+  //   criar dados
+  //   const db = getDatabase(firebase);
+  //   const taskListRef = ref(db, 'tasks/uuid-que-inventei-3');
+  //   const newTaskRef = push(taskListRef);
+  //   set(newTaskRef, {
+  //     taskId: 'uuid2',
+  //     description: 'desc2',
+  //     checked: 'true'
+  //   });
+  //   const isValid = validateInput(task);
+  //   if (!isValid) {
+  //     alert('You must type anything');
+  //     return;
+  //   }
+  //   setTasks(prevState => {
+  //     return [...prevState, {
+  //       id: uuidv4(),
+  //       description: task,
+  //       checked: false,
+  //       status: 'in-progress',
+  //     }]
+  //   });
+  //   setFilterChoise('all')
+  //   setTask('');
+  // }
+
   const handleAddTask = () => {
     const isValid = validateInput(task);
     if (!isValid) {
       alert('You must type anything');
       return;
     }
-    setTasks(prevState => {
-      return [...prevState, {
-        id: uuidv4(),
-        description: task,
-        checked: false,
-        status: 'in-progress',
-      }]
+    const auth = getAuth(firebase);
+    const userId = auth.currentUser.uid;
+    const db = getDatabase(firebase);
+    const taskListRef = ref(db, `tasks/${userId}`);
+    const newTaskRef = push(taskListRef);
+    set(newTaskRef, {
+      description: task,
+      checked: false,
+      status: 'in-progress'
     });
+    getAllTasks()
     setFilterChoise('all')
     setTask('');
   }
 
+
+
   const handleDeleteTask = (taskId) => {
+    const auth = getAuth(firebase);
+    const userId = auth.currentUser.uid;
+    const db = getDatabase(firebase);
     toggleDeleteModal()
-    const newTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(newTasks);
+    remove(ref(db, `tasks/${userId}/${taskId}`))
+    getAllTasks();
   }
 
   const handleCheckTask = (taskId) => {
@@ -130,7 +187,7 @@ const Home = () => {
       setTasks(newTasks);
       setSomeChecked(false);
     }
-    
+
   }
 
   const handleKeyPressed = (e) => {
@@ -138,24 +195,24 @@ const Home = () => {
       handleAddTask();
     }
   }
-  
+
   const handleUpdateTask = (taskId, newDescription) => {
-    const newTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          description: newDescription
-        }
-      } else {
-        return task;
-      } 
-    })
-    setTasks(newTasks);
+    const auth = getAuth(firebase);
+    const userId = auth.currentUser.uid;
+    const db = getDatabase(firebase);
+    const task = tasks.filter((task) => task.id === taskId)[0];
+    console.log('task', task)
+    const newTask = { ...task, description: newDescription }
+    const updates = {
+      [`tasks/${userId}/${taskId}`]: newTask
+    };
+    update(ref(db), updates);
+    getAllTasks();
     toggleUpdateModal()
   }
 
   const handleDoneTask = (taskId) => {
-    const newTasks = tasks.map((task) => taskId === task.id ? { ...task, status: task.status === 'done' ? 'in-progress' : 'done' } : task );
+    const newTasks = tasks.map((task) => taskId === task.id ? { ...task, status: task.status === 'done' ? 'in-progress' : 'done' } : task);
     setTasks(newTasks);
   }
 
@@ -169,6 +226,7 @@ const Home = () => {
 
   return (
     <div className="container">
+      
       <header>
         <h1 className="messages color">Welcome back, Caio</h1>
         <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
@@ -186,7 +244,7 @@ const Home = () => {
           <option className="status-option" value="in-progress">In Progress</option>
         </select>
       </div>
-      
+
 
       {deleteModal && <DeleteModal
         toggleModal={toggleDeleteModal}
@@ -216,13 +274,13 @@ const Home = () => {
               handleTaskToDelete={handleTaskToDelete}
               handleTaskIdToUpdate={handleTaskIdToUpdate}
               handleDoneTask={handleDoneTask}
-          />)
+            />)
           : <p className="no-tasks messages color">There are no tasks</p>}
       </ul>
 
       <div className="check-buttons-container">
         <div className="check-buttons">
-          {tasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{ someChecked ? 'Uncheck all' : 'Check all' }</button> : null}
+          {tasks.length ? <button className="check-all-tasks-button" onClick={handleCheckAll}>{someChecked ? 'Uncheck all' : 'Check all'}</button> : null}
           {tasks.length ? <button className="delete-all-tasks-button" onClick={handleDeleteAll}>Delete all checked</button> : null}
         </div>
       </div>
