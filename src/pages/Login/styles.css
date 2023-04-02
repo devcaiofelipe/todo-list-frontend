@@ -152,19 +152,18 @@
   justify-content: center;
   align-items: center;
   width: 600px;
-  height: 650px; 
+  height: 600px; 
   border-radius: 8px;
   background-color: white;
   box-shadow: 1px 1px 1px #cfcfcf;
-  margin-bottom: 20px;
 }
 
 .create-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   width: 85%;
-  height: 90%;
+  height: 80%;
 }
 
 .back-to-login {
@@ -225,10 +224,32 @@
 
 .profile-picture-container {
   margin-top: 10px;
+  height: 100px;
 }
 
 .profile-picture {
   height: 100px;
   width: 100px;
   border-radius: 50%;
+}
+
+.policy-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  height: 10px;
+  margin-bottom: 20px;
+}
+
+.policy-container p {
+  margin-top: 5px;
+}
+
+.service-terms-container {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
 }

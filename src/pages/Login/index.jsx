@@ -108,11 +108,11 @@ const Login = () => {
             <input id="input"type="password" className="creation-account-input" placeholder="Type password again"/>
             <button type="submit" className="create-account-button">Create Account</button>
           </form>
-          <div>
-            <div>
+          <div className="policy-container">
+            <div className="service-terms-container">
+              <input type="checkbox" checked={false} className="task-container-checkbox"/>
               <p>I agree to be bound by the project <a href="/not-found">service terms</a></p>
             </div>
-            <p>See our <a href="/not-found">privacy policy</a> for more information</p>
           </div>
           <div className="back-to-login">
             <p>Do you already have an account?</p>
