@@ -5,7 +5,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 import firebase from '../../shared/firebase';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { MdAddAPhoto } from "react-icons/md";
+import { FiLogIn } from "react-icons/fi";
 import logo from '../../assets/2.jpg'
 
 
@@ -19,6 +21,25 @@ const Login = () => {
   const [isSigned, setIsSigned] = useState(false);
   const [isLoginScreen, setIsLoginScreen] = useState(true);
   const navigation = useNavigate();
+
+
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [userPasswordConfirmation, setUserPasswordConfirmation] = useState('');
+
+  useEffect(() => {
+    if (isSigned === true) {
+      navigation('home')
+    }
+  }, [isSigned, navigation])
+
+  const handleUserName = (e) => setUserName(e.target.value);
+  const handleUserEmail = (e) => setUserEmail(e.target.value);
+  const handleUserPassword = (e) => setUserPassword(e.target.value);
+  const handleUserPasswordConfirmation = (e) => setUserPasswordConfirmation(e.target.value);
+
+  const hasAllFields = () => userName && userEmail && userPassword && userPasswordConfirmation
 
   const toggleScreen = () => {
     setIsLoginScreen(!isLoginScreen);
@@ -41,11 +62,10 @@ const Login = () => {
     } 
   }
 
-  useEffect(() => {
-    if (isSigned === true) {
-      navigation('home')
-    }
-  }, [isSigned, navigation])
+  const handleUserCreation = (e) => {
+    e.preventDefault();
+    console.log('Criando usuario')
+  }
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -65,7 +85,11 @@ const Login = () => {
       { isLoginScreen ? (
       <div className="login-container">
         <div className="login-content">
-          <p className="login-title">Login</p>
+          <div className="login-header">
+            <p className="login-title">Login</p>
+            <FiLogIn className="login-icon"/>
+          </div>
+          
           <p className="login-info">Type your e-mail and password below to sign in at Mind Organizer</p>
           <form action="#" className="login-form" onSubmit={handleSubmit}>
             <label htmlFor="email-input" className="label" style={ wrongCredentials ? {
@@ -80,7 +104,7 @@ const Login = () => {
             <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
               border: '2px solid #FF0839'
             } : null }/>
-            { wrongCredentials && <span className="error-message">E-mail or password invalid</span>}
+            { <p className="error-message" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
@@ -95,18 +119,26 @@ const Login = () => {
       ) : (
         <div className="creation-container">
           <div className="profile-picture-container">
+            <label htmlFor="add-picture">
+              <MdAddAPhoto className="camera-icon" onClick={() => console.log('Cliquei na fotinha')}/>
+            </label>
+            <input type="file" id="add-picture"/>
             <img src={logo} alt="logo" className="profile-picture"/>
+            
           </div>
-          <form className="create-form">
+          <form action="#" className="create-form" onSubmit={handleUserCreation}>
             <label htmlFor="input" className="label">Name</label>
-            <input id="input"type="text" className="creation-account-input" placeholder="Your name"/>
+            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName}/>
             <label htmlFor="input" className="label">E-mail</label>
-            <input id="input"type="text" className="creation-account-input" placeholder="youremail@example.com"/>
+            <input type="text" className="creation-account-input" placeholder="youremail@example.com" onChange={handleUserEmail}/>
             <label htmlFor="input" className="label">Password</label>
-            <input id="input"type="password" className="creation-account-input" placeholder="Password (6 characters minimum)"/>
+            <input type="password" className="creation-account-input" placeholder="Password (6 characters minimum)" onChange={handleUserPassword}/>
             <label htmlFor="input" className="label">Confirmation</label>
-            <input id="input"type="password" className="creation-account-input" placeholder="Type password again"/>
-            <button type="submit" className="create-account-button">Create Account</button>
+            <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation}/>
+            <button type="submit" className="create-account-button" disabled={!hasAllFields()} style={ !hasAllFields() ? {
+              backgroundColor: 'rgb(177, 177, 177)',
+              color: 'black',
+            } : null }>Create Account</button>
           </form>
           <div className="back-to-login">
             <p>Do you already have an account?</p>

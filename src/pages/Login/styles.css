@@ -34,10 +34,12 @@
   align-items: center;
   flex-wrap: wrap;
   width: 600px;
+  height: 700px;
   min-height: 500px; 
   border-radius: 8px;
   background-color: white;
   box-shadow: 1px 1px 1px #cfcfcf;
+  margin-bottom: 30px;
 }
 
 .login-content {
@@ -49,6 +51,18 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 25px
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-icon {
+  width: 40px;
+  height: 40px;
+  color: #232555;
 }
 
 .login-title {
@@ -72,7 +86,7 @@
 }
 
 .form-input {
-  height: 25%;
+  height: 13%;
   text-indent: 15px;
   border-radius: 10px;
   border: 2px solid rgb(177, 177, 177);
@@ -85,8 +99,7 @@
 }
 
 .signin-button {
-  margin-top: 50px;
-  height: 80px;
+  height: 50px;
   font-family: 'Cabin', sans-serif;
   font-size: 16px;
   background-color: #444791;
@@ -152,10 +165,11 @@
   justify-content: center;
   align-items: center;
   width: 600px;
-  height: 600px; 
+  height: 700px; 
   border-radius: 8px;
   background-color: white;
   box-shadow: 1px 1px 1px #cfcfcf;
+  margin-bottom: 30px;
 }
 
 .create-form {
@@ -223,12 +237,30 @@
 }
 
 .profile-picture-container {
+  position: relative;
   margin-top: 10px;
   height: 100px;
+}
+
+.camera-icon {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  bottom: 10px;
+  right: 10px;
+  color: #444791;
+}
+
+.camera-icon:hover {
+  color: #232555;
 }
 
 .profile-picture {
   height: 100px;
   width: 100px;
   border-radius: 50%;
+}
+
+.profile-picture-container>input {
+  display: none;
 }
