@@ -232,24 +232,3 @@
   width: 100px;
   border-radius: 50%;
 }
-
-.policy-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 75%;
-  height: 10px;
-  margin-bottom: 20px;
-}
-
-.policy-container p {
-  margin-top: 5px;
-}
-
-.service-terms-container {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: center;
-}
