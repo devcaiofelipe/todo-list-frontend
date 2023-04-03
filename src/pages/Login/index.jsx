@@ -5,7 +5,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import firebase from '../../shared/firebase';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { MdAddAPhoto } from "react-icons/md";
 import { FiLogIn } from "react-icons/fi";
 import logo from '../../assets/2.jpg'
@@ -27,6 +27,7 @@ const Login = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userPasswordConfirmation, setUserPasswordConfirmation] = useState('');
+  const [userProfilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
     if (isSigned === true) {
@@ -62,9 +63,14 @@ const Login = () => {
     } 
   }
 
-  const handleUserCreation = (e) => {
+  const handleCreateUser = async (e) => {
     e.preventDefault();
-    console.log('Criando usuario')
+    
+    const newUser = await createUserWithEmailAndPassword(auth, userEmail, userPassword)
+    await updateProfile(newUser.user.auth.currentUser, {
+      displayName: 'Caiozao',
+      disabled: false,
+    })
   }
 
   const handleEmail = (e) => {
@@ -73,6 +79,10 @@ const Login = () => {
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
+  }
+
+  const handleProfilePicture = (e) => {
+    setProfilePicture(e.target.files[0])
   }
 
   return (
@@ -122,11 +132,11 @@ const Login = () => {
             <label htmlFor="add-picture">
               <MdAddAPhoto className="camera-icon" onClick={() => console.log('Cliquei na fotinha')}/>
             </label>
-            <input type="file" id="add-picture"/>
-            <img src={logo} alt="logo" className="profile-picture"/>
+            <input type="file" id="add-picture" onChange={handleProfilePicture}/>
+            <img src={userProfilePicture ? URL.createObjectURL(userProfilePicture) : logo} alt="logo" className="profile-picture"/>
             
           </div>
-          <form action="#" className="create-form" onSubmit={handleUserCreation}>
+          <form action="#" className="create-form" onSubmit={handleCreateUser}>
             <label htmlFor="input" className="label">Name</label>
             <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName}/>
             <label htmlFor="input" className="label">E-mail</label>
