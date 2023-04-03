@@ -106,18 +106,21 @@ const Login = () => {
               color: '#FF0839',
             } : null }>E-mail</label>
             <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={wrongCredentials ? {
-              border: '2px solid #FF0839'
-            } : null }/>
+              border: '2px solid #FF0839',
+              backgroundColor: email ? '#ebebf5' : 'white'
+            } : { backgroundColor: email ? '#ebebf5' : 'white' } }/>
             <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
               color: '#FF0839',
             } : null }>Password</label>
             <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
-              border: '2px solid #FF0839'
-            } : null }/>
+              border: '2px solid #FF0839',
+              backgroundColor: password ? '#ebebf5' : 'white'
+            } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
             { <p className="error-message" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
+              cursor: 'default'
             } : null } disabled={!email || !password}>{ loginLoad ? <span className="loader"></span> : 'Sign in' }</button>
           </form>
           <div className="create-account">
@@ -138,16 +141,17 @@ const Login = () => {
           </div>
           <form action="#" className="create-form" onSubmit={handleCreateUser}>
             <label htmlFor="input" className="label">Name</label>
-            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName}/>
+            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName} style={{ backgroundColor: userName ? '#ebebf5' : 'white'}}/>
             <label htmlFor="input" className="label">E-mail</label>
-            <input type="text" className="creation-account-input" placeholder="youremail@example.com" onChange={handleUserEmail}/>
+            <input type="text" className="creation-account-input" placeholder="youremail@example.com" onChange={handleUserEmail} style={{ backgroundColor: userEmail ? '#ebebf5' : 'white'}}/>
             <label htmlFor="input" className="label">Password</label>
-            <input type="password" className="creation-account-input" placeholder="Password (6 characters minimum)" onChange={handleUserPassword}/>
+            <input type="password" className="creation-account-input" placeholder="Password (6 characters minimum)" onChange={handleUserPassword} style={{ backgroundColor: userPassword ? '#ebebf5' : 'white'}}/>
             <label htmlFor="input" className="label">Confirmation</label>
-            <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation}/>
+            <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation} style={{ backgroundColor: userPasswordConfirmation ? '#ebebf5' : 'white'}}/>
             <button type="submit" className="create-account-button" disabled={!hasAllFields()} style={ !hasAllFields() ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
+              cursor: 'default'
             } : null }>Create Account</button>
           </form>
           <div className="back-to-login">
