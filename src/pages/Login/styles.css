@@ -114,7 +114,7 @@
 }
 
 .error-message {
-  font-size: 15px;
+  font-size: 14px;
   color: red;
 }
 
@@ -177,7 +177,7 @@
 .create-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   width: 85%;
   height: 80%;
 }
@@ -186,7 +186,8 @@
   display: flex;
   flex-direction: row;
   width: 85%;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   justify-content: space-between;
   align-items: center;
 }
@@ -267,4 +268,8 @@
 
 .profile-picture-container>input {
   display: none;
+}
+
+.messages-errors-container {
+  margin-left: 15px;
 }

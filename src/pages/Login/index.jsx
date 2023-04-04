@@ -1,17 +1,18 @@
 import './styles.css'
 import { useState, useEffect } from 'react';
-import { RiTodoLine } from "react-icons/ri";
+import { RiTodoLine } from 'react-icons/ri';
 import {
   useNavigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { MdAddAPhoto } from "react-icons/md";
-import { FiLogIn } from "react-icons/fi";
+import storage from '../../shared/firebaseStorage'
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { MdAddAPhoto } from 'react-icons/md';
+import { FiLogIn } from 'react-icons/fi';
 import logo from '../../assets/2.jpg'
-
-
 const auth = getAuth(firebase); 
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,6 +29,9 @@ const Login = () => {
   const [userPassword, setUserPassword] = useState('');
   const [userPasswordConfirmation, setUserPasswordConfirmation] = useState('');
   const [userProfilePicture, setProfilePicture] = useState(null);
+
+  const [wrongEmail, setWrongEmail] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState([]);
 
   useEffect(() => {
     if (isSigned === true) {
@@ -63,14 +67,61 @@ const Login = () => {
     } 
   }
 
+  const validateCreateInputs = () => {
+    const errors = [];
+    let containsError = false;
+    if (!userEmail.includes('@')) {
+      setWrongEmail(true)
+      containsError = true;
+    }
+    if (userPassword !== userPasswordConfirmation) {
+      errors.push('The password confirmation does not match');
+      containsError = true;
+    }
+    if (userPassword.length < 6) {
+      errors.push('Password must contains at least 6 characters')
+      containsError = true;
+    }
+    if (!/[A-Z]/.test(userPassword)) {
+      errors.push('Password must contains at least one uppercase character')
+      containsError = true;
+    }
+    if (!/[a-z]/.test(userPassword)) {
+      errors.push('Password must contains at least one lowercase character')
+      containsError = true;
+    }
+    if (!/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(userPassword)) {
+      errors.push('Password must contains at least one special character')
+      containsError = true;
+    }
+    setPasswordErrors(errors)
+    return containsError;
+  }
+
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    
-    const newUser = await createUserWithEmailAndPassword(auth, userEmail, userPassword)
-    await updateProfile(newUser.user.auth.currentUser, {
-      displayName: 'Caiozao',
+    const hasError = validateCreateInputs();
+    if (hasError) return;
+    try {
+      const newUser = await createUserWithEmailAndPassword(auth, userEmail.toLocaleLowerCase(), userPassword)
+      let photoURL = null;
+      if (userProfilePicture) {
+        const pathRef = ref(storage, `pictures/${newUser.user.auth.currentUser.uid}`);
+        const result = await uploadBytes(pathRef, userProfilePicture);
+        photoURL = result.metadata.fullPath;
+      }
+      
+      await updateProfile(newUser.user.auth.currentUser, {
+      displayName: userName,
+      ...(photoURL && { photoURL }),
       disabled: false,
     })
+    } catch (e) {
+      if (e.message === 'Firebase: Error (auth/invalid-email).') {
+        setWrongEmail(true)
+      }
+    }
+    
   }
 
   const handleEmail = (e) => {
@@ -141,13 +192,24 @@ const Login = () => {
           </div>
           <form action="#" className="create-form" onSubmit={handleCreateUser}>
             <label htmlFor="input" className="label">Name</label>
-            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName} style={{ backgroundColor: userName ? '#ebebf5' : 'white'}}/>
-            <label htmlFor="input" className="label">E-mail</label>
-            <input type="text" className="creation-account-input" placeholder="youremail@example.com" onChange={handleUserEmail} style={{ backgroundColor: userEmail ? '#ebebf5' : 'white'}}/>
-            <label htmlFor="input" className="label">Password</label>
-            <input type="password" className="creation-account-input" placeholder="Password (6 characters minimum)" onChange={handleUserPassword} style={{ backgroundColor: userPassword ? '#ebebf5' : 'white'}}/>
-            <label htmlFor="input" className="label">Confirmation</label>
-            <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation} style={{ backgroundColor: userPasswordConfirmation ? '#ebebf5' : 'white'}}/>
+            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName}/>
+            <label htmlFor="input" className="label" style={ wrongEmail ? {
+              color: '#FF0839',
+            } : null}>E-mail</label>
+            <input type="text" className="creation-account-input" placeholder="youremail@example.com" onChange={handleUserEmail} style={{ backgroundColor: userEmail ? '#ebebf5' : 'white', ...(wrongEmail && { border: '2px solid #FF0839' })}}/>
+            <p className="error-message" style={ { display: wrongEmail ? 'block' : 'none' }}>Invalid e-mail</p>
+            <label htmlFor="input" className="label" style={ passwordErrors.length ? {
+              color: '#FF0839',
+            } : null}>Password</label>
+            <input type="password" className="creation-account-input" placeholder="Password (6 characters minimum)" onChange={handleUserPassword} style={{ backgroundColor: userPassword ? '#ebebf5' : 'white', ...(passwordErrors.length && { border: '2px solid #FF0839' })}}/>
+            <label htmlFor="input" className="label" style={ passwordErrors.length ? {
+              color: '#FF0839',
+            } : null}>Confirmation</label>
+            <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation} style={{ backgroundColor: userPasswordConfirmation ? '#ebebf5' : 'white', ...(passwordErrors.length && { border: '2px solid #FF0839' })}}/>
+            <ul style={{ display: passwordErrors.length ? 'block' : 'none' }} className="messages-errors-container">
+              { passwordErrors.map((message) => <li className="error-message">{message}</li>)}
+            </ul>
+            
             <button type="submit" className="create-account-button" disabled={!hasAllFields()} style={ !hasAllFields() ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',

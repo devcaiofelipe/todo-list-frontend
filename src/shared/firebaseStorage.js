@@ -1,7 +1,6 @@
 import { getStorage } from 'firebase/storage';
-import firebaseConfig from '../shared/firebaseConfig';
+import app from '../shared/firebase'
 
-// Initialize Cloud Storage and get a reference to the service
-const storage = getStorage(firebaseConfig);
+const storage = getStorage(app);
 
 export default storage;
