@@ -7,7 +7,7 @@ import {
 import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import storage from '../../shared/firebaseStorage'
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { FiLogIn } from 'react-icons/fi';
 import logo from '../../assets/2.jpg'
@@ -21,8 +21,6 @@ const Login = () => {
   const [wrongCredentials, setWrongCredentials] = useState(false);
   const [isSigned, setIsSigned] = useState(false);
   const [isLoginScreen, setIsLoginScreen] = useState(true);
-  const navigation = useNavigate();
-
 
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -32,6 +30,8 @@ const Login = () => {
 
   const [wrongEmail, setWrongEmail] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
+
+  const navigation = useNavigate();
 
   useEffect(() => {
     if (isSigned === true) {
