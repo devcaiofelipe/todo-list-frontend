@@ -258,6 +258,7 @@
 
 .camera-icon:hover {
   color: #232555;
+  cursor: pointer;
 }
 
 .profile-picture {
