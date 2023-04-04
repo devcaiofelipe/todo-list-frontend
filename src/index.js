@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 

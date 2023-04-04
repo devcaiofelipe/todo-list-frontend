@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
 import {
   useNavigate,
+  redirect
 } from 'react-router-dom';
 import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -31,6 +32,10 @@ const Login = () => {
   const [wrongEmail, setWrongEmail] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
 
+  const [createUserLoading, setCreateUserLoading] = useState(false);
+
+  const [userWasCreated, setUserWasCreated] = useState(false);
+
   const navigation = useNavigate();
 
   useEffect(() => {
@@ -50,11 +55,12 @@ const Login = () => {
     setIsLoginScreen(!isLoginScreen);
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const login = async () => {
     setLoginLoad(true)
+    const emailToLogin = userWasCreated ? userEmail : email;
+    const passwordToLogin = userWasCreated ? userPassword : password;
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
       const token = userCredential.accessToken;
       localStorage.setItem('token', token);
       setIsSigned(true);
@@ -65,6 +71,11 @@ const Login = () => {
     } finally {
       setLoginLoad(false);
     } 
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    await login();
   }
 
   const validateCreateInputs = () => {
@@ -103,6 +114,7 @@ const Login = () => {
     const hasError = validateCreateInputs();
     if (hasError) return;
     try {
+      setCreateUserLoading(true);
       const newUser = await createUserWithEmailAndPassword(auth, userEmail.toLocaleLowerCase(), userPassword)
       let photoURL = null;
       if (userProfilePicture) {
@@ -112,16 +124,19 @@ const Login = () => {
       }
       
       await updateProfile(newUser.user.auth.currentUser, {
-      displayName: userName,
-      ...(photoURL && { photoURL }),
-      disabled: false,
-    })
+        displayName: userName,
+        ...(photoURL && { photoURL }),
+        disabled: false,
+      })
+      setUserWasCreated(true);
+      await login();
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
         setWrongEmail(true)
       }
-    }
-    
+    } finally {
+      setCreateUserLoading(false);
+    } 
   }
 
   const handleEmail = (e) => {
@@ -152,18 +167,18 @@ const Login = () => {
           </div>
           
           <p className="login-info">Type your e-mail and password below to sign in at Mind Organizer</p>
-          <form action="#" className="login-form" onSubmit={handleSubmit}>
+          <form action="#" className="login-form" onSubmit={handleLogin}>
             <label htmlFor="email-input" className="label" style={ wrongCredentials ? {
               color: '#FF0839',
             } : null }>E-mail</label>
-            <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={wrongCredentials ? {
+            <input id="email-input"type="text" className="form-input" placeholder="E-mail" value={userWasCreated ? userEmail : ''} onChange={handleEmail} style={wrongCredentials ? {
               border: '2px solid #FF0839',
               backgroundColor: email ? '#ebebf5' : 'white'
             } : { backgroundColor: email ? '#ebebf5' : 'white' } }/>
             <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
               color: '#FF0839',
             } : null }>Password</label>
-            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
+            <input id="password-input" type="password" className="form-input" placeholder="Password" value={userWasCreated ? userPassword : ''} onChange={handlePassword} style={wrongCredentials ? {
               border: '2px solid #FF0839',
               backgroundColor: password ? '#ebebf5' : 'white'
             } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
@@ -184,7 +199,7 @@ const Login = () => {
         <div className="creation-container">
           <div className="profile-picture-container">
             <label htmlFor="add-picture">
-              <MdAddAPhoto className="camera-icon" onClick={() => console.log('Cliquei na fotinha')}/>
+              <MdAddAPhoto className="camera-icon"/>
             </label>
             <input type="file" id="add-picture" onChange={handleProfilePicture}/>
             <img src={userProfilePicture ? URL.createObjectURL(userProfilePicture) : logo} alt="logo" className="profile-picture"/>
@@ -209,6 +224,10 @@ const Login = () => {
             <ul style={{ display: passwordErrors.length ? 'block' : 'none' }} className="messages-errors-container">
               { passwordErrors.map((message) => <li className="error-message">{message}</li>)}
             </ul>
+
+            <div className="spinner-container-overlay" style={{ display: createUserLoading ? 'block' : 'none' }}>
+              <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
             
             <button type="submit" className="create-account-button" disabled={!hasAllFields()} style={ !hasAllFields() ? {
               backgroundColor: 'rgb(177, 177, 177)',
