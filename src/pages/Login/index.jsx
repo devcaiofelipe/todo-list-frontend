@@ -96,7 +96,7 @@ const Login = () => {
       errors.push('Password must contains at least one lowercase character')
       containsError = true;
     }
-    if (!/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(userPassword)) {
+    if (!/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/g.test(userPassword)) {
       errors.push('Password must contains at least one special character')
       containsError = true;
     }
