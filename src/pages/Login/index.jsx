@@ -1,10 +1,7 @@
 import './styles.css'
 import { useState, useEffect } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
-import {
-  useNavigate,
-  redirect
-} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import storage from '../../shared/firebaseStorage'
@@ -12,8 +9,8 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { FiLogIn } from 'react-icons/fi';
 import logo from '../../assets/2.jpg'
-const auth = getAuth(firebase); 
 
+const auth = getAuth(firebase); 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,12 +25,10 @@ const Login = () => {
   const [userPassword, setUserPassword] = useState('');
   const [userPasswordConfirmation, setUserPasswordConfirmation] = useState('');
   const [userProfilePicture, setProfilePicture] = useState(null);
-
+  
   const [wrongEmail, setWrongEmail] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
-
   const [createUserLoading, setCreateUserLoading] = useState(false);
-
   const [userWasCreated, setUserWasCreated] = useState(false);
 
   const navigation = useNavigate();
@@ -118,7 +113,7 @@ const Login = () => {
       const newUser = await createUserWithEmailAndPassword(auth, userEmail.toLocaleLowerCase(), userPassword)
       let photoURL = null;
       if (userProfilePicture) {
-        const pathRef = ref(storage, `pictures/${newUser.user.auth.currentUser.uid}`);
+        const pathRef = ref(storage, `pictures/${newUser.user.auth.currentUser.uid}/photo.png`);
         const result = await uploadBytes(pathRef, userProfilePicture);
         photoURL = result.metadata.fullPath;
       }
@@ -129,14 +124,14 @@ const Login = () => {
         disabled: false,
       })
       setUserWasCreated(true);
-      await login();
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
         setWrongEmail(true)
       }
     } finally {
       setCreateUserLoading(false);
-    } 
+    }
+    await login();
   }
 
   const handleEmail = (e) => {
@@ -171,14 +166,14 @@ const Login = () => {
             <label htmlFor="email-input" className="label" style={ wrongCredentials ? {
               color: '#FF0839',
             } : null }>E-mail</label>
-            <input id="email-input"type="text" className="form-input" placeholder="E-mail" value={userWasCreated ? userEmail : ''} onChange={handleEmail} style={wrongCredentials ? {
+            <input id="email-input"type="text" className="form-input" placeholder="E-mail" onChange={handleEmail} style={wrongCredentials ? {
               border: '2px solid #FF0839',
               backgroundColor: email ? '#ebebf5' : 'white'
             } : { backgroundColor: email ? '#ebebf5' : 'white' } }/>
             <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
               color: '#FF0839',
             } : null }>Password</label>
-            <input id="password-input" type="password" className="form-input" placeholder="Password" value={userWasCreated ? userPassword : ''} onChange={handlePassword} style={wrongCredentials ? {
+            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
               border: '2px solid #FF0839',
               backgroundColor: password ? '#ebebf5' : 'white'
             } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
@@ -222,7 +217,7 @@ const Login = () => {
             } : null}>Confirmation</label>
             <input type="password" className="creation-account-input" placeholder="Type password again" onChange={handleUserPasswordConfirmation} style={{ backgroundColor: userPasswordConfirmation ? '#ebebf5' : 'white', ...(passwordErrors.length && { border: '2px solid #FF0839' })}}/>
             <ul style={{ display: passwordErrors.length ? 'block' : 'none' }} className="messages-errors-container">
-              { passwordErrors.map((message) => <li className="error-message">{message}</li>)}
+              { passwordErrors.map((message, i) => <li key={i} className="error-message">{message}</li>)}
             </ul>
 
             <div className="spinner-container-overlay" style={{ display: createUserLoading ? 'block' : 'none' }}>

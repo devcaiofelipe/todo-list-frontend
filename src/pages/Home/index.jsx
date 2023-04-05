@@ -1,13 +1,13 @@
 import './styles.css'
 import { useState, useEffect } from 'react';
-// import { v4 as uuidv4 } from 'uuid';
 import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
-import { VscAdd } from "react-icons/vsc";
+import { VscAdd } from 'react-icons/vsc';
 import firebase from '../../shared/firebase';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
+import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 
 const Home = () => {
   const [task, setTask] = useState('');
@@ -19,10 +19,32 @@ const Home = () => {
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
   const [filterChoise, setFilterChoise] = useState('all');
+  const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
 
   useEffect(() => {
+    handleUserInfo();
     getAllTasks()
   }, [])
+
+  const handleUserInfo = async () => {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    const user = auth.currentUser;
+    const currentUser = userId ? userId : localStorage.getItem('userId')
+    localStorage.setItem('userId', currentUser);
+    const displayName = user.displayName;
+    const storage = getStorage();
+    const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
+    const url = await getDownloadURL(pathReference)
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = (event) => {
+      console.log('responsee', xhr.response)
+      setUserInfo({ displayName, photoURL: xhr.response })
+    };
+    xhr.open('GET', url);
+    xhr.send();
+  }
 
   const getAllTasks = () => {
     const auth = getAuth();
@@ -100,8 +122,6 @@ const Home = () => {
     setFilterChoise('all')
     setTask('');
   }
-
-
 
   const handleDeleteTask = (taskId) => {
     const currentUser = localStorage.getItem('userId')
@@ -190,9 +210,12 @@ const Home = () => {
   return (
     <div className="container">
       
-      <header>
-        <h1 className="messages color">Welcome back, Caio</h1>
-        <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
+      <header className="header-content">
+        <div>
+          <h1 className="messages color">Welcome back, {userInfo?.displayName || 'guest'}</h1>
+          <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
+        </div>
+        <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : null } alt="logo" className="profile-picture"/>
       </header>
 
       <div className="handle-task-container">
