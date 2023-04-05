@@ -8,7 +8,7 @@ import storage from '../../shared/firebaseStorage'
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { FiLogIn } from 'react-icons/fi';
-import logo from '../../assets/2.jpg'
+import defaultLogo from '../../assets/defaultLogo.jpg'
 
 const auth = getAuth(firebase); 
 
@@ -197,7 +197,7 @@ const Login = () => {
               <MdAddAPhoto className="camera-icon"/>
             </label>
             <input type="file" id="add-picture" onChange={handleProfilePicture}/>
-            <img src={userProfilePicture ? URL.createObjectURL(userProfilePicture) : logo} alt="logo" className="profile-picture"/>
+            <img src={ userProfilePicture ? URL.createObjectURL(userProfilePicture) : defaultLogo } alt="logo" className="profile-picture"/>
             
           </div>
           <form action="#" className="create-form" onSubmit={handleCreateUser}>

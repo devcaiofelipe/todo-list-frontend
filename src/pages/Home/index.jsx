@@ -8,6 +8,7 @@ import firebase from '../../shared/firebase';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
+import defaultLogoGrey from '../../assets/profile-gray.jpeg'
 
 const Home = () => {
   const [task, setTask] = useState('');
@@ -33,17 +34,23 @@ const Home = () => {
     const currentUser = userId ? userId : localStorage.getItem('userId')
     localStorage.setItem('userId', currentUser);
     const displayName = user.displayName;
-    const storage = getStorage();
-    const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-    const url = await getDownloadURL(pathReference)
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = 'blob';
-    xhr.onload = (event) => {
-      console.log('responsee', xhr.response)
-      setUserInfo({ displayName, photoURL: xhr.response })
-    };
-    xhr.open('GET', url);
-    xhr.send();
+    try {
+      const storage = getStorage();
+      const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
+      const url = await getDownloadURL(pathReference)
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+        console.log(displayName)
+        setUserInfo({ displayName, photoURL: xhr.response })
+      };
+      xhr.open('GET', url);
+      xhr.send();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setUserInfo(prevState => ({ ...prevState, displayName }))
+    }
   }
 
   const getAllTasks = () => {
@@ -212,10 +219,10 @@ const Home = () => {
       
       <header className="header-content">
         <div>
-          <h1 className="messages color">Welcome back, {userInfo?.displayName || 'guest'}</h1>
+          <h1 className="messages color">Welcome, {userInfo?.displayName || 'guest'}</h1>
           <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
         </div>
-        <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : null } alt="logo" className="profile-picture"/>
+        <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogoGrey} alt="logo" className="profile-picture-home"/>
       </header>
 
       <div className="handle-task-container">
