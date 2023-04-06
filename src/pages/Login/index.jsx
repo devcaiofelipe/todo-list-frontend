@@ -8,6 +8,7 @@ import storage from '../../shared/firebaseStorage'
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { FiLogIn } from 'react-icons/fi';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import defaultLogo from '../../assets/defaultLogo.jpg'
 
 const auth = getAuth(firebase); 
@@ -31,10 +32,12 @@ const Login = () => {
   const [createUserLoading, setCreateUserLoading] = useState(false);
   const [userWasCreated, setUserWasCreated] = useState(false);
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const navigation = useNavigate();
 
   useEffect(() => {
-    if (isSigned === true) {
+    if (isSigned) {
       navigation('home')
     }
   }, [isSigned, navigation])
@@ -48,6 +51,10 @@ const Login = () => {
 
   const toggleScreen = () => {
     setIsLoginScreen(!isLoginScreen);
+  }
+
+  const togglePasswordVisible = () => {
+    setPasswordVisible(!passwordVisible);
   }
 
   const login = async () => {
@@ -170,13 +177,17 @@ const Login = () => {
               border: '2px solid #FF0839',
               backgroundColor: email ? '#ebebf5' : 'white'
             } : { backgroundColor: email ? '#ebebf5' : 'white' } }/>
-            <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
-              color: '#FF0839',
-            } : null }>Password</label>
-            <input id="password-input" type="password" className="form-input" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
-              border: '2px solid #FF0839',
-              backgroundColor: password ? '#ebebf5' : 'white'
-            } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
+            <div className="password-container">
+              <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
+                color: '#FF0839',
+              } : null }>Password</label>
+              <input id="password-input" type={passwordVisible ? 'password' : 'text' } className="form-input-password" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
+                border: '2px solid #FF0839',
+                backgroundColor: password ? '#ebebf5' : 'white'
+              } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
+              { passwordVisible ? <AiFillEye className="eye-icon-invisible" onClick={togglePasswordVisible}/> : <AiFillEyeInvisible className="eye-icon-invisible" onClick={togglePasswordVisible}/>}
+            </div>
+            
             { <p className="error-message" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',

@@ -85,11 +85,41 @@
   height: 100%;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 20%;
+  gap: 20px;
+}
+
+.eye-icon-invisible {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 44%;
+  right: 10px;
+  color: #232555;
+}
+
 .form-input {
-  height: 13%;
+  height: 15%;
   text-indent: 15px;
   border-radius: 10px;
   border: 2px solid rgb(177, 177, 177);
+}
+
+.form-input-password {
+  height: 100%;
+  text-indent: 15px;
+  border-radius: 10px;
+  border: 2px solid rgb(177, 177, 177);
+}
+
+.form-input-password:focus {
+  border: 2px solid #444791;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .form-input:focus {

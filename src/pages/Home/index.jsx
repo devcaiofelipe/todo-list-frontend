@@ -4,6 +4,8 @@ import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from 'react-icons/vsc';
+import { FiLogOut } from 'react-icons/fi';
+import { BsSearch } from 'react-icons/bs';
 import firebase from '../../shared/firebase';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
@@ -222,15 +224,23 @@ const Home = () => {
           <h1 className="messages color">Welcome, {userInfo?.displayName || 'guest'}</h1>
           <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
         </div>
-        <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogoGrey} alt="logo" className="profile-picture-home"/>
+        <div className="logout-container">
+          <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogoGrey} alt="logo" className="profile-picture-home"/>
+          <FiLogOut className="logout-icon"/>
+        </div>
       </header>
 
       <div className="handle-task-container">
-        <input className="add-task-input messages" type="text" placeholder="Add new task..." autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
+        <input className="add-task-input messages" type="text" placeholder="Add a new task..." autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
 
       <div className="status-container">
+        <div className="search-container">
+          <input type="text" className="search-input messages" placeholder="Search for a task"/>
+          <BsSearch className="search-icon"/>
+          <button className="search-button">Search</button>
+        </div>
         <select className="status-select" value={filterChoise} onChange={handleFilter}>
           <option className="status-option" value="all">All</option>
           <option className="status-option" value="done">Done</option>
