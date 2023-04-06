@@ -32,7 +32,7 @@ const Login = () => {
   const [createUserLoading, setCreateUserLoading] = useState(false);
   const [userWasCreated, setUserWasCreated] = useState(false);
 
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordInvisible, setPasswordInvisible] = useState(true);
 
   const navigation = useNavigate();
 
@@ -54,7 +54,7 @@ const Login = () => {
   }
 
   const togglePasswordVisible = () => {
-    setPasswordVisible(!passwordVisible);
+    setPasswordInvisible(!passwordInvisible);
   }
 
   const login = async () => {
@@ -181,11 +181,11 @@ const Login = () => {
               <label htmlFor="password-input" className="label" style={ wrongCredentials ? {
                 color: '#FF0839',
               } : null }>Password</label>
-              <input id="password-input" type={passwordVisible ? 'password' : 'text' } className="form-input-password" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
+              <input id="password-input" type={passwordInvisible ? 'password' : 'text' } className="form-input-password" placeholder="Password" onChange={handlePassword} style={wrongCredentials ? {
                 border: '2px solid #FF0839',
                 backgroundColor: password ? '#ebebf5' : 'white'
               } : { backgroundColor: password ? '#ebebf5' : 'white' } }/>
-              { passwordVisible ? <AiFillEye className="eye-icon-invisible" onClick={togglePasswordVisible}/> : <AiFillEyeInvisible className="eye-icon-invisible" onClick={togglePasswordVisible}/>}
+              { passwordInvisible ? <AiFillEye className="eye-icon-invisible" onClick={togglePasswordVisible}/> : <AiFillEyeInvisible className="eye-icon-invisible" onClick={togglePasswordVisible}/>}
             </div>
             
             { <p className="error-message" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}

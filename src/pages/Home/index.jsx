@@ -23,6 +23,8 @@ const Home = () => {
   const [oldValue, setOldValue] = useState('');
   const [filterChoise, setFilterChoise] = useState('all');
   const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
+  const [search, setSearch] = useState('');
+  const [valueToSearch, setValueToSearch] = useState('');
 
   useEffect(() => {
     handleUserInfo();
@@ -43,7 +45,6 @@ const Home = () => {
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
       xhr.onload = (event) => {
-        console.log(displayName)
         setUserInfo({ displayName, photoURL: xhr.response })
       };
       xhr.open('GET', url);
@@ -53,6 +54,10 @@ const Home = () => {
     } finally {
       setUserInfo(prevState => ({ ...prevState, displayName }))
     }
+  }
+
+  const handleSearchInput = (e) => {
+    setSearch(e.target.value);
   }
 
   const getAllTasks = () => {
@@ -237,9 +242,8 @@ const Home = () => {
 
       <div className="status-container">
         <div className="search-container">
-          <input type="text" className="search-input messages" placeholder="Search for a task"/>
+          <input type="text" className="search-input messages" placeholder="Search for a task" onChange={handleSearchInput}/>
           <BsSearch className="search-icon"/>
-          <button className="search-button">Search</button>
         </div>
         <select className="status-select" value={filterChoise} onChange={handleFilter}>
           <option className="status-option" value="all">All</option>
@@ -268,6 +272,14 @@ const Home = () => {
             .filter((task) => {
               if (filterChoise === 'all') return task;
               return task.status === filterChoise;
+            })
+            .filter((task) => task.description.toLowerCase().includes(search.toLocaleLowerCase()))
+            .filter((task) => {
+              if (valueToSearch) {
+                return task.description.toLowerCase().includes(search.toLocaleLowerCase())
+              } else {
+                return task;
+              }
             })
             .map((task) => <Task key={task.id}
               task={task}

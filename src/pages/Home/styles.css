@@ -79,6 +79,7 @@ body {
   border: none;
   color: white;
   font-size: 50px;
+  cursor: pointer;
 }
 
 .delete-all-tasks-button {
@@ -184,6 +185,7 @@ body {
 
 .search-button:hover {
   background-color: #2b2d6d;
+  cursor: pointer;
 }
 
 .search-input {
