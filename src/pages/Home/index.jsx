@@ -7,7 +7,7 @@ import { VscAdd } from 'react-icons/vsc';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { BsSearch } from 'react-icons/bs';
 import firebase from '../../shared/firebase';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import defaultLogo from '../../assets/defaultLogo.jpg'
@@ -26,17 +26,16 @@ const Home = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    handleUserInfo();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleUserInfo(user.uid, user.displayName);
+      } else {}
+    });
     getAllTasks()
   }, [])
 
-  const handleUserInfo = async () => {
-    const auth = getAuth();
-    const userId = auth.currentUser?.uid;
-    const user = auth.currentUser;
-    const currentUser = userId ? userId : localStorage.getItem('userId')
-    localStorage.setItem('userId', currentUser);
-    const displayName = user.displayName;
+  const handleUserInfo = async (userId, displayName) => {
     try {
       const storage = getStorage();
       const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
