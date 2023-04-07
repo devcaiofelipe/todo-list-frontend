@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import firebase from '../../shared/firebase';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
 import storage from '../../shared/firebaseStorage'
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
@@ -36,12 +36,19 @@ const Login = () => {
   const navigation = useNavigate();
 
   useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation('home')
+      } else {}
+    });
+  }, [navigation])
+
+  useEffect(() => {
     if (isSigned) {
       navigation('home')
     }
   }, [isSigned, navigation])
-
- 
 
   const handleUserName = (e) => setUserName(e.target.value);
   const handleUserEmail = (e) => setUserEmail(e.target.value);
