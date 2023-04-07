@@ -235,7 +235,7 @@ const Login = () => {
               <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
             
-            <button type="submit" className="create-account-button" disabled={!hasAllFields() || createUserLoading} style={ !hasAllFields() ? {
+            <button type="submit" className="create-account-button" disabled={!hasAllFields() || createUserLoading} style={ !hasAllFields() || createUserLoading ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
               cursor: 'default'
