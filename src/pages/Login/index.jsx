@@ -30,7 +30,6 @@ const Login = () => {
   const [wrongEmail, setWrongEmail] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
   const [createUserLoading, setCreateUserLoading] = useState(false);
-  const [userWasCreated, setUserWasCreated] = useState(false);
 
   const [passwordInvisible, setPasswordInvisible] = useState(true);
 
@@ -41,6 +40,8 @@ const Login = () => {
       navigation('home')
     }
   }, [isSigned, navigation])
+
+ 
 
   const handleUserName = (e) => setUserName(e.target.value);
   const handleUserEmail = (e) => setUserEmail(e.target.value);
@@ -57,10 +58,10 @@ const Login = () => {
     setPasswordInvisible(!passwordInvisible);
   }
 
-  const login = async () => {
+  const login = async (userEmail, userPassword) => {
     setLoginLoad(true)
-    const emailToLogin = userWasCreated ? userEmail : email;
-    const passwordToLogin = userWasCreated ? userPassword : password;
+    const emailToLogin = userEmail || email;
+    const passwordToLogin = userPassword || password;
     try {
       const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
       const token = userCredential.accessToken;
@@ -130,7 +131,7 @@ const Login = () => {
         ...(photoURL && { photoURL }),
         disabled: false,
       })
-      setUserWasCreated(true);
+      await login(userEmail, userPassword);
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
         setWrongEmail(true)
@@ -138,7 +139,6 @@ const Login = () => {
     } finally {
       setCreateUserLoading(false);
     }
-    await login();
   }
 
   const handleEmail = (e) => {
@@ -235,7 +235,7 @@ const Login = () => {
               <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
             
-            <button type="submit" className="create-account-button" disabled={!hasAllFields()} style={ !hasAllFields() ? {
+            <button type="submit" className="create-account-button" disabled={!hasAllFields() || createUserLoading} style={ !hasAllFields() ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
               cursor: 'default'
