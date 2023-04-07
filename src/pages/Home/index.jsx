@@ -24,7 +24,6 @@ const Home = () => {
   const [filterChoise, setFilterChoise] = useState('all');
   const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
   const [search, setSearch] = useState('');
-  const [valueToSearch, setValueToSearch] = useState('');
 
   useEffect(() => {
     handleUserInfo();
@@ -274,13 +273,6 @@ const Home = () => {
               return task.status === filterChoise;
             })
             .filter((task) => task.description.toLowerCase().includes(search.toLocaleLowerCase()))
-            .filter((task) => {
-              if (valueToSearch) {
-                return task.description.toLowerCase().includes(search.toLocaleLowerCase())
-              } else {
-                return task;
-              }
-            })
             .map((task) => <Task key={task.id}
               task={task}
               description={task.description}
