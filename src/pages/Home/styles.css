@@ -5,12 +5,17 @@
 }
 
 html {
-  height: 100%
+  height: 100%;
+  max-width: 100%;
+  width: 100vw;
 }
 
 body {
   min-height: 100vh;
+  width: 100%;
   background-color: #F0F2F5;
+  margin: 0px 0px 0px 0px;
+  overflow-x: hidden;
 }
 
 
@@ -22,20 +27,6 @@ body {
   color: #232555
 }
 
-.profile-picture-home {
-  top: 20px;
-  left: 650px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-.header-content {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -43,6 +34,41 @@ body {
   align-items: center;
   width: 100%;
   gap: 35px;
+}
+
+.header-container {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 101%;
+  height: 60px;
+  background-color: white;
+  font-size: 28px;
+  color: #2b2d6d;
+  font-weight: 1000;
+  z-index: 1;
+  box-shadow: 0px 3px 2px -2px rgba(182, 182, 182, 0.904);
+}
+
+.header-title {
+  margin-left: 20px
+}
+
+.profile-picture-home {
+  top: 20px;
+  left: 650px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 50px;
+}
+
+.title-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 70px;
 }
 
 .handle-task-container {
@@ -243,9 +269,13 @@ body {
 
 .logout-icon {
   position: absolute;
-  width: 25px;
-  height: 25px;
+  width: 15px;
+  height: 15px;
   bottom: 10px;
-  right: 0px;
-  color: #444791;
+  top: 25px;
+  right: 50px;
+  color: #2b2d6d;
+  background-color: #F0F2F5;
+  border-radius: 50%;
+  border: 2px solid rgb(160, 158, 158);
 }
