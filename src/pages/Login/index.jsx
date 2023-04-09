@@ -1,15 +1,16 @@
 import './styles.css'
+import defaultLogo from '../../assets/defaultLogo.jpg'
+import storage from '../../shared/firebaseStorage'
+import firebase from '../../shared/firebase';
 import { useState, useEffect } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import firebase from '../../shared/firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
-import storage from '../../shared/firebaseStorage'
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { FiLogIn } from 'react-icons/fi';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-import defaultLogo from '../../assets/defaultLogo.jpg'
+
 
 const auth = getAuth(firebase); 
 

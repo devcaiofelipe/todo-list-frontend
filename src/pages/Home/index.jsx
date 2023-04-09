@@ -1,18 +1,18 @@
 import './styles.css'
-import { useState, useEffect } from 'react';
 import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
+import firebase from '../../shared/firebase';
+import defaultLogo from '../../assets/defaultLogo.jpg'
 import { VscAdd } from 'react-icons/vsc';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
-import firebase from '../../shared/firebase';
+import { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
-import defaultLogo from '../../assets/defaultLogo.jpg'
 import { LoadingContent } from '../../components/LoadingContent/index';
 import { useNavigate } from 'react-router-dom';
 
