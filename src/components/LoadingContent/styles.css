@@ -1,0 +1,35 @@
+
+.loading-profile {
+  display: flex;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #F0F2F5;
+  z-index: 2;
+  font-size: 28px;
+  color: #2b2d6d;
+}
+
+.loading-icon {
+  margin-top: 20%;
+  width: 200px;
+  height: 200px;
+}
+
+.loading-profile-content {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+  overflow: hidden;
+}
+.loading-profile-content h1 {
+  margin-bottom: 100px;
+}
+
+.loading-profile-content h1 {
+  margin-bottom: 100px;
+}

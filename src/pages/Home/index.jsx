@@ -11,6 +11,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import defaultLogo from '../../assets/defaultLogo.jpg'
+import { RiTodoLine } from 'react-icons/ri';
 
 const Home = () => {
   const [task, setTask] = useState('');
@@ -24,15 +25,19 @@ const Home = () => {
   const [filterChoise, setFilterChoise] = useState('all');
   const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
   const [search, setSearch] = useState('');
+  const [loadingContent, setLoadingContent] = useState('');
 
   useEffect(() => {
+    setLoadingContent(true);
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         handleUserInfo(user.uid, user.displayName);
-      } else {}
+        getAllTasks(user.uid)
+      } else {
+        console.log('nao achei usuario')
+      }
     });
-    getAllTasks()
   }, [])
 
   const handleUserInfo = async (userId, displayName) => {
@@ -58,13 +63,14 @@ const Home = () => {
     setSearch(e.target.value);
   }
 
-  const getAllTasks = () => {
+  const getAllTasks = (userIdSupplied) => {
     const auth = getAuth();
-    const userId = auth.currentUser?.uid;
+    const userId = userIdSupplied || auth.currentUser?.uid;
     const dbRef = ref(getDatabase(firebase));
     
     const currentUser = userId ? userId : localStorage.getItem('userId')
     localStorage.setItem('userId', userId);
+    console.log(currentUser);
     get(child(dbRef, `tasks/${currentUser}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const keys = Object.keys(snapshot.val())
@@ -75,11 +81,14 @@ const Home = () => {
           status: snapshot.val()[key].status,
         }))
         setTasks(normalizedTasks);
+        setLoadingContent(false);
       } else {
         console.log("No data available");
+        setLoadingContent(false);
       }
     }).catch((error) => {
-      console.error(error);
+      console.error('somee error', error);
+      setLoadingContent(false);
     });
   }
 
@@ -121,6 +130,7 @@ const Home = () => {
       alert('You must type anything');
       return;
     }
+    const auth = getAuth()
     const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     const taskListRef = ref(db, `tasks/${currentUser}`);
@@ -130,17 +140,20 @@ const Home = () => {
       checked: false,
       status: 'in-progress'
     });
-    getAllTasks()
+    getAllTasks(auth.currentUser?.uid)
     setFilterChoise('all')
     setTask('');
   }
 
   const handleDeleteTask = (taskId) => {
+    const auth = getAuth()
     const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
-    toggleDeleteModal()
-    remove(ref(db, `tasks/${currentUser}/${taskId}`))
-    getAllTasks();
+    
+    remove(ref(db, `tasks/${currentUser}/${taskId}`)).then((response) => {
+      getAllTasks(auth.currentUser?.uid);
+      toggleDeleteModal()
+    })
   }
 
   const handleCheckTask = (taskId) => {
@@ -158,14 +171,17 @@ const Home = () => {
   }
 
   const handleDeleteAll = () => {
+    const auth = getAuth()
     const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     tasks.forEach((task) => {
       if (task.checked) {
         remove(ref(db, `tasks/${currentUser}/${task.id}`))
+        .then(() => {
+          getAllTasks(auth.currentUser?.uid);
+        })
       }
     })
-    getAllTasks();
   }
 
   const handleCheckAll = () => {
@@ -201,9 +217,10 @@ const Home = () => {
     const updates = {
       [`tasks/${currentUser}/${taskId}`]: newTask
     };
-    update(ref(db), updates);
-    getAllTasks();
-    toggleUpdateModal()
+    update(ref(db), updates).then(() => {
+      getAllTasks();
+      toggleUpdateModal()
+    })  
   }
 
   const handleDoneTask = (taskId) => {
@@ -222,6 +239,13 @@ const Home = () => {
   return (
     <div className="container">
 
+      <div className="loading-profile" style={{ display: loadingContent ? 'block' : 'none' }}>
+        <div className="loading-profile-content">
+          <RiTodoLine className="loading-icon"/>
+          <h1>Mind Organizer</h1>
+        </div>
+      </div>
+
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
         <div className="logout-container">
@@ -238,7 +262,7 @@ const Home = () => {
       </div>
 
       <div className="handle-task-container">
-        <input className="add-task-input messages" type="text" placeholder="Add a new task..." autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
+        <input className="add-task-input messages" type="text" placeholder="Add a new task" autoFocus value={task} onChange={handleInputChange} onKeyDown={handleKeyPressed}></input>
         <button className="add-task-button" onClick={handleAddTask}><VscAdd /></button>
       </div>
 
