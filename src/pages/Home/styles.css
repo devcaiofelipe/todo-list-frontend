@@ -16,6 +16,7 @@ body {
   background-color: #F0F2F5;
   margin: 0px 0px 0px 0px;
   overflow-x: hidden;
+  user-select: none;
 }
 
 .loading-profile {
@@ -339,6 +340,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   color:#1E1E1E;
+  user-select: none;
 }
 
 .item-container {
@@ -352,6 +354,7 @@ body {
 .item-container:hover {
   background-color: #F2F2F2;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .item-container p {

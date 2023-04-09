@@ -9,13 +9,15 @@ import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
 import firebase from '../../shared/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import defaultLogo from '../../assets/defaultLogo.jpg'
 import { LoadingContent } from '../../components/LoadingContent/index';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigation = useNavigate();
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -89,7 +91,7 @@ const Home = () => {
         setTasks(normalizedTasks);
         setLoadingContent(false);
       } else {
-        console.log("No data available");
+        setTasks([]);
         setLoadingContent(false);
       }
     }).catch((error) => {
@@ -156,7 +158,7 @@ const Home = () => {
     const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     
-    remove(ref(db, `tasks/${currentUser}/${taskId}`)).then((response) => {
+    remove(ref(db, `tasks/${currentUser}/${taskId}`)).then(() => {
       getAllTasks(auth.currentUser?.uid);
       toggleDeleteModal()
     })
@@ -190,6 +192,13 @@ const Home = () => {
     })
   }
 
+  const handleExit = () => {
+    const auth = getAuth()
+    signOut(auth).then(() => {
+      navigation('/')
+    })
+  }
+
   const handleCheckAll = () => {
     if (!someChecked) {
       const newTasks = tasks.map((task) => ({
@@ -206,7 +215,6 @@ const Home = () => {
       setTasks(newTasks);
       setSomeChecked(false);
     }
-
   }
 
   const handleKeyPressed = (e) => {
@@ -258,9 +266,9 @@ const Home = () => {
                 <div className="icon-container"><BsGearFill className="icon"/></div>
                 <p className="dropdown-message">Settings</p>
               </div>
-              <div className="item-container">
+              <div className="item-container" onClick={handleExit}>
                 <div className="icon-container"><ImExit className="icon exit"/></div>
-                <p className="dropdown-message">Exit</p>
+                <p className="dropdown-message">Sign Out</p>
               </div>
             </div>
           </div>
