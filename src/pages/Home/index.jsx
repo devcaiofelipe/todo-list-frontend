@@ -40,10 +40,11 @@ const Home = () => {
         handleUserInfo(user.uid, user.displayName);
         getAllTasks(user.uid)
       } else {
-        console.log('nao achei usuario')
+        console.log('user not found')
+        navigation('')
       }
     });
-  }, [])
+  }, [navigation])
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
