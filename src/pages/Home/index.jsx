@@ -11,7 +11,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import defaultLogo from '../../assets/defaultLogo.jpg'
-import { RiTodoLine } from 'react-icons/ri';
+import { LoadingContent } from '../../components/LoadingContent/index';
 
 const Home = () => {
   const [task, setTask] = useState('');
@@ -239,12 +239,7 @@ const Home = () => {
   return (
     <div className="container">
 
-      <div className="loading-profile" style={{ display: loadingContent ? 'block' : 'none' }}>
-        <div className="loading-profile-content">
-          <RiTodoLine className="loading-icon"/>
-          <h1>Mind Organizer</h1>
-        </div>
-      </div>
+      { loadingContent && <LoadingContent/>}
 
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>

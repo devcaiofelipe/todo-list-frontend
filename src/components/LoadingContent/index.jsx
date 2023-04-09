@@ -1,3 +1,4 @@
+import './styles.css';
 import { RiTodoLine } from 'react-icons/ri';
 
 export const LoadingContent = () => {
