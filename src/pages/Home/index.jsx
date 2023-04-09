@@ -4,8 +4,10 @@ import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import { VscAdd } from 'react-icons/vsc';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
+import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
+import { ImExit } from 'react-icons/im';
 import firebase from '../../shared/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
@@ -26,6 +28,7 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
   const [search, setSearch] = useState('');
   const [loadingContent, setLoadingContent] = useState('');
+  const [dropdown, setDropdown] = useState(false);
 
   useEffect(() => {
     setLoadingContent(true);
@@ -39,6 +42,10 @@ const Home = () => {
       }
     });
   }, [])
+
+  const toggleDropdown = () => {
+    setDropdown(!dropdown);
+  }
 
   const handleUserInfo = async (userId, displayName) => {
     try {
@@ -70,7 +77,6 @@ const Home = () => {
     
     const currentUser = userId ? userId : localStorage.getItem('userId')
     localStorage.setItem('userId', userId);
-    console.log(currentUser);
     get(child(dbRef, `tasks/${currentUser}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const keys = Object.keys(snapshot.val())
@@ -244,8 +250,20 @@ const Home = () => {
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
         <div className="logout-container">
-          <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogo} alt="logo" className="profile-picture-home"/>
-          <MdKeyboardArrowDown className="logout-icon"/>
+          <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogo} alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
+          { dropdown ? <MdKeyboardArrowUp className="logout-icon" onClick={toggleDropdown}/> : <MdKeyboardArrowDown className="logout-icon" onClick={toggleDropdown}/>}
+          <div className="user-dropdown" style={{ display: dropdown ? 'block' : 'none'}}>
+            <div className="user-dropdown-content">
+              <div className="item-container">
+                <div className="icon-container"><BsGearFill className="icon"/></div>
+                <p className="dropdown-message">Settings</p>
+              </div>
+              <div className="item-container">
+                <div className="icon-container"><ImExit className="icon exit"/></div>
+                <p className="dropdown-message">Exit</p>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
       

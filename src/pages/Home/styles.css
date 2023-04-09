@@ -94,8 +94,8 @@ body {
 .profile-picture-home {
   top: 20px;
   left: 650px;
-  width: 40px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   margin-right: 50px;
 }
@@ -309,12 +309,82 @@ body {
   position: relative;
 }
 
+.user-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  height: 150px;
+  width: 200px;
+  background-color: #FCFCFC;
+  top: 65px;
+  right: 50px;
+  border-radius: 8px;
+  font-size: 18px;
+  z-index: 1;
+  /* border: 1px solid grey; */
+  box-shadow: 0 0 10px 6px #DDDFE2;
+}
+
+.user-dropdown-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.dropdown-message {
+  font-size: 16px;
+  font-weight: 400;
+  color:#1E1E1E;
+}
+
+.item-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  padding: 7px;
+}
+
+.item-container:hover {
+  background-color: #F2F2F2;
+  border-radius: 5px;
+}
+
+.item-container p {
+  margin-left: 10px;
+}
+
+.icon-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e8e9ec;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  color: #1C1D21;
+}
+
+.exit {
+  margin-left: 5px;
+}
+
 .logout-icon {
   position: absolute;
   width: 15px;
   height: 15px;
   bottom: 10px;
-  top: 25px;
+  top: 40px;
   right: 50px;
   color: #2b2d6d;
   background-color: #F0F2F5;
