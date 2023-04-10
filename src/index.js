@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Settings from './pages/Settings'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -12,12 +13,16 @@ import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Login/>,
+    path: '/',
+    element: <Settings/>,
   },
   {
-    path: "/home",
-    element: <Home/>,
+    path: '/home',
+    element: <Home exact/>,
+  },
+  {
+    path: '/settings',
+    element: <Settings/>,
   },
 ]);
 
