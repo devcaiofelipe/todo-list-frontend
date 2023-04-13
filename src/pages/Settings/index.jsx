@@ -6,6 +6,9 @@ import { BsTrash } from 'react-icons/bs'
 const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
+
+  const [newName, setNewName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
   
   const toggleEditName = () => {
     setEditingName(!editingName);
@@ -13,6 +16,16 @@ const Settings = () => {
 
   const toggleEditEmail = () => {
     setEditingEmail(!editingEmail);
+  }
+
+  const handleName = (e) => {
+    console.log(e.target.value)
+    setNewName(e.target.value);
+  }
+
+  const handleEmail = (e) => {
+    console.log(e.target.value)
+    setNewEmail(e.target.value);
   }
 
   return (
@@ -35,7 +48,7 @@ const Settings = () => {
                 <div className="edit-name-header header">Name</div>
                 <div className="edit-name-content">
                   <div className="edit-name-content-header">
-                    New name<input type="text" className="input-edit"/>
+                    New name<input type="text" className="input-edit" onChange={handleName}/>
                   </div>
                   <div className="observation">
                     <strong style={{ color: '#1C1E21' }}>Observation:</strong> if you change your Mind Organizer name you won't be able to change again before 60 days
@@ -62,7 +75,7 @@ const Settings = () => {
                 <div className="edit-name-header header">Email</div>
                 <div className="edit-name-content">
                   <div className="edit-name-content-header-email">
-                    New email<input type="text" className="input-edit"/>
+                    New email<input type="text" className="input-edit" onChange={handleEmail}/>
                   </div>
                   <div className="message">
                     <p>We'll use this email to send you marketing updates and notifications about your personal account</p>
