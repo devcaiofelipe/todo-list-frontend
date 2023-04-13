@@ -17,8 +17,8 @@
 .settings-content {
   display: flex;
   flex-direction: column;
-  width: 500px;
-  height: 500px;
+  width: 800px;
+  height: 800px;
   background-color: white;
 }
 
@@ -36,19 +36,32 @@
   border: 1px solid #EBEDF0;
 }
 
-.li-content {
+.li-box {
   display: flex;
   padding: 10px 2px;
   align-items: baseline;
   border-radius: 3px;
+  width: 100%;
+}
+
+.li-content {
+  display: flex;
+  padding: 15px 2px;
+  align-items: baseline;
+  border-radius: 3px;
   cursor: pointer;
+}
+
+.li-content-p {
+  display: flex;
+  flex: 1;
 }
 
 .li-content:hover {
   background-color: #f3f3f3;
 }
 
-.li-content:hover ~ .li-edit {
+.li-content:hover .li-edit {
   text-decoration: underline;
 }
 
@@ -74,13 +87,115 @@
   cursor: pointer;
 }
 
-.footer-container {
+.li-content-edit-name {
+  height: 200px;
+  font-weight: bold;
+  background-color: #F2F2F2;
+  padding: 15px 2px;
+}
+
+.li-content-edit-email {
+  height: 200px;
+  font-weight: bold;
+  background-color: #F2F2F2;
+  padding: 15px 2px;
+}
+
+.edit-name-header {
+  width: 250px;
+  margin-left: 10px;
+}
+
+.observation {
+  padding: 15px;
+  width: 100%;
+  font-size: 14px;
+  background-color: #DADDE1;
+  border-radius: 5px;
+}
+
+.header {
+  font-weight: 500;
+}
+
+.edit-name-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: #606770;
+  gap: 20px;
+}
+
+.edit-name-content-header-email {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.message {
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.input-edit {
+  margin-left: 10px;
+  height: 25px;
+  border-radius: 3px;
+  border: 1px solid grey;
+}
+
+.buttons-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid grey;
+}
+
+.button-editing {
+  padding: 5px 8px;
+  border: 1px solid rgb(207, 207, 207);
+  outline: none;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.obs {
+  font-weight: 800;
+}
+
+.confirm-edit {
+  color: white;
+  background-color: #444791;
+}
+
+.cancel-edit {
+  color:#7a7979;
+  background-color: white;
+}
+
+
+.li-main-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 70%;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-top: 50px;
 }
+
 .footer-container span {
   font-size: 12px;
   color: #7a7979;
@@ -88,4 +203,17 @@
 
 .copyright {
   font-size: 10px;
+}
+
+.delete-acc-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 5px;
+  background-color: white;
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+  border-radius: 3px;
+  gap: 3px;
 }
