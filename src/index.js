@@ -14,11 +14,11 @@ import reportWebVitals from './reportWebVitals';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Settings/>,
+    element: <Login/>,
   },
   {
     path: '/home',
-    element: <Home exact/>,
+    element: <Home/>,
   },
   {
     path: '/settings',

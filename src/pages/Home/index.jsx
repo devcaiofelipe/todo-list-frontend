@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import { LoadingContent } from '../../components/LoadingContent/index';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Home = () => {
   const navigation = useNavigate();
@@ -263,10 +263,12 @@ const Home = () => {
           { dropdown ? <MdKeyboardArrowUp className="logout-icon" onClick={toggleDropdown}/> : <MdKeyboardArrowDown className="logout-icon" onClick={toggleDropdown}/>}
           <div className="user-dropdown" style={{ display: dropdown ? 'block' : 'none'}}>
             <div className="user-dropdown-content">
-              <div className="item-container">
-                <div className="icon-container"><BsGearFill className="icon"/></div>
-                <p className="dropdown-message">Settings</p>
-              </div>
+              <Link to="/settings" className="dropdown-message">
+                <div className="item-container">
+                  <div className="icon-container"><BsGearFill className="icon"/></div>
+                  <p className="title-settings">Settings</p>
+                </div>
+              </Link>
               <div className="item-container" onClick={handleExit}>
                 <div className="icon-container"><ImExit className="icon exit"/></div>
                 <p className="dropdown-message">Sign Out</p>

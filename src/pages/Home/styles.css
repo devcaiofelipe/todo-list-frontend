@@ -341,6 +341,7 @@ body {
   font-weight: 400;
   color:#1E1E1E;
   user-select: none;
+  text-decoration: none;
 }
 
 .item-container {
@@ -359,6 +360,7 @@ body {
 
 .item-container p {
   margin-left: 10px;
+  
 }
 
 .icon-container {
