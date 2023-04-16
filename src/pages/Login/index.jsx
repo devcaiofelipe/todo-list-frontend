@@ -1,5 +1,5 @@
 import './styles.css'
-import defaultLogo from '../../assets/defaultLogo.jpg'
+import defaultLogo from '../../assets/defaultLogo.jpeg'
 import storage from '../../shared/firebaseStorage'
 import firebase from '../../shared/firebase';
 import { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
+import { TfiGoogle } from 'react-icons/tfi';
 import { FiLogIn } from 'react-icons/fi';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
@@ -202,6 +203,7 @@ const Login = () => {
               color: 'black',
               cursor: 'default'
             } : null } disabled={!email || !password}>{ loginLoad ? <span className="loader"></span> : 'Sign in' }</button>
+            <button className="signin-with-google"><TfiGoogle className="google-icon"/>Sign in with google</button>
           </form>
           <div className="create-account">
             <p>Don't have an account?</p>

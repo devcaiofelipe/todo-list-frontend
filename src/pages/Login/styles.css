@@ -305,6 +305,24 @@
   margin-left: 15px;
 }
 
+.signin-with-google {
+  display: flex;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #E8542E;
+  color: white;
+  cursor: pointer;
+}
+
+.google-icon {
+  font-size: 20px;
+}
 
 /* Load Spinner */
 .spinner-container-overlay {

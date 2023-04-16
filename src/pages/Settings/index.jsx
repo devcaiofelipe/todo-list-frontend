@@ -18,7 +18,7 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { ImExit } from 'react-icons/im';
 import { Link } from 'react-router-dom';
 import { ref as refDatabase, getDownloadURL } from 'firebase/storage'
-import defaultLogo from '../../assets/defaultLogo.jpg';
+import defaultLogo from '../../assets/defaultLogo.jpeg';
 import storage from '../../shared/firebaseStorage';
 
 

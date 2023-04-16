@@ -3,7 +3,7 @@ import Task from '../../components/Task'
 import DeleteModal from '../../components/DeleteModal';
 import UpdateModal from '../../components/UpdateModal';
 import firebase from '../../shared/firebase';
-import defaultLogo from '../../assets/defaultLogo.jpg'
+import defaultLogo from '../../assets/defaultLogo.jpeg'
 import { VscAdd } from 'react-icons/vsc';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';

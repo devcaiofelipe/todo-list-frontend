@@ -94,11 +94,11 @@ body {
 
 .profile-picture-home {
   top: 20px;
-  left: 650px;
+  left: 660px;
   width: 55px;
   height: 55px;
   border-radius: 50%;
-  margin-right: 50px;
+  margin-right: 20px;
 }
 
 .title-content {
@@ -393,7 +393,7 @@ body {
   height: 15px;
   bottom: 10px;
   top: 40px;
-  right: 50px;
+  right: 25px;
   color: #2b2d6d;
   background-color: #F0F2F5;
   border-radius: 50%;
