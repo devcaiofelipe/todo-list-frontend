@@ -101,7 +101,19 @@
   padding: 15px 2px;
 }
 
+.li-content-edit-password{
+  height: 200px;
+  font-weight: bold;
+  background-color: #F2F2F2;
+  padding: 15px 2px;
+}
+
 .edit-name-header {
+  width: 250px;
+  margin-left: 10px;
+}
+
+.edit-password-header {
   width: 250px;
   margin-left: 10px;
 }
@@ -127,11 +139,73 @@
   gap: 20px;
 }
 
+.message-color {
+  color: #606770;
+}
+
+.edit-password-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: #606770;
+  gap: 20px;
+}
+
 .edit-name-content-header-email {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   gap: 5px;
+}
+
+.edit-password-content-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.error-message {
+  font-size: 14px;
+  color: red;
+  margin-left: 16px;
+  margin-bottom: 5px;
+}
+
+
+.main-password-content {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+
+.tittle-password-names {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 180px;
+  gap: 10px;
+}
+
+.tittle-password-names label {
+  height: 25px;
+}
+
+.tittle-password-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tittle-password-inputs input {
+  height: 25px;
+}
+
+.main-password-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .message {
@@ -142,6 +216,7 @@
 .input-edit {
   margin-left: 10px;
   height: 25px;
+  width: 200px;
   border-radius: 3px;
   border: 1px solid grey;
 }

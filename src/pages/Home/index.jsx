@@ -9,12 +9,13 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import { LoadingContent } from '../../components/LoadingContent/index';
 import { useNavigate, Link } from 'react-router-dom';
+import { GlobalContext } from '../../index';
 
 const Home = () => {
   const navigation = useNavigate();
@@ -27,17 +28,17 @@ const Home = () => {
   const [idToUpdate, setIdToUpdate] = useState('');
   const [oldValue, setOldValue] = useState('');
   const [filterChoise, setFilterChoise] = useState('all');
-  const [userInfo, setUserInfo] = useState({ displayName: 'Anonymous', photoURL: '' });
   const [search, setSearch] = useState('');
   const [loadingContent, setLoadingContent] = useState('');
   const [dropdown, setDropdown] = useState(false);
+  const { contextState, setContextState } = useContext(GlobalContext)
 
   useEffect(() => {
     setLoadingContent(true);
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        handleUserInfo(user.uid, user.displayName);
+        handleUserInfo(user.uid, user.displayName, user.email);
         getAllTasks(user.uid)
       } else {
         console.log('user not found')
@@ -50,7 +51,7 @@ const Home = () => {
     setDropdown(!dropdown);
   }
 
-  const handleUserInfo = async (userId, displayName) => {
+  const handleUserInfo = async (userId, displayName, email) => {
     try {
       const storage = getStorage();
       const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
@@ -58,14 +59,14 @@ const Home = () => {
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
       xhr.onload = (event) => {
-        setUserInfo({ displayName, photoURL: xhr.response })
+        setContextState({ displayName, email, photoURL: xhr.response })
       };
       xhr.open('GET', url);
       xhr.send();
     } catch (e) {
       console.error(e);
     } finally {
-      setUserInfo(prevState => ({ ...prevState, displayName }))
+      setContextState(prevState => ({ ...prevState, displayName }))
     }
   }
 
@@ -259,7 +260,7 @@ const Home = () => {
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
         <div className="logout-container">
-          <img src={ userInfo.photoURL ? URL.createObjectURL(userInfo.photoURL) : defaultLogo} alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
+          <img src={ contextState.photoURL ? URL.createObjectURL(contextState.photoURL) : defaultLogo} alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
           { dropdown ? <MdKeyboardArrowUp className="logout-icon" onClick={toggleDropdown}/> : <MdKeyboardArrowDown className="logout-icon" onClick={toggleDropdown}/>}
           <div className="user-dropdown" style={{ display: dropdown ? 'block' : 'none'}}>
             <div className="user-dropdown-content">
@@ -280,7 +281,7 @@ const Home = () => {
       
       <div className="title-content">
         <div>
-          <h1 className="messages color">Welcome, {userInfo?.displayName || 'guest'}</h1>
+          <h1 className="messages color">Welcome, {contextState.displayName || 'guest'}</h1>
           <p className="messages color">You've got {tasks.length} tasks coming up in the next days.</p>
         </div>
       </div>

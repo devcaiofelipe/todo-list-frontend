@@ -14,26 +14,41 @@ import reportWebVitals from './reportWebVitals';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Login/>,
+    element: <Login />,
   },
   {
     path: '/home',
-    element: <Home/>,
+    element: <Home />,
   },
   {
     path: '/settings',
-    element: <Settings/>,
+    element: <Settings />,
   },
 ]);
 
+const globalState = {
+  displayName: 'Anonymous',
+  email: 'anonymous@email.com',
+  photoURL: ''
+}
 
+export const GlobalContext = React.createContext(globalState);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+const App = () => {
+  const [contextState, setContextState] = React.useState(globalState);
+  return (
+    <GlobalContext.Provider value={{ contextState, setContextState }}>
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
+    </GlobalContext.Provider>
+  );
+}
+
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <App/>
 );
 
 // If you want to start measuring performance in your app, pass a function

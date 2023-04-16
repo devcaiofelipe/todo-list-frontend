@@ -1,14 +1,34 @@
 import './styles.css';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { AiOutlineCopyrightCircle } from 'react-icons/ai'
 import { BsTrash } from 'react-icons/bs'
+import { GlobalContext } from '../../index';
+import { 
+  getAuth, 
+  updateProfile, 
+  updateEmail, 
+  signOut, 
+  reauthenticateWithCredential, 
+  EmailAuthProvider,
+  updatePassword
+ } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
+  const [editingPassword, setEdittingPassword] = useState(false);
 
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('');
+  const [passwordDoesNotMatch, setPasswordDoesNotMatch] = useState(false);
+  const [oldPasswordWrong, setOldPasswordWrong] = useState(false);
+
+  const { contextState, setContextState }= useContext(GlobalContext);
+  const navigation = useNavigate();
   
   const toggleEditName = () => {
     setEditingName(!editingName);
@@ -18,14 +38,78 @@ const Settings = () => {
     setEditingEmail(!editingEmail);
   }
 
+  const toggleEditPassword = () => {
+    setPasswordDoesNotMatch(false);
+    setOldPasswordWrong(false);
+    setEdittingPassword(!editingPassword);
+  }
+
   const handleName = (e) => {
-    console.log(e.target.value)
     setNewName(e.target.value);
   }
 
   const handleEmail = (e) => {
-    console.log(e.target.value)
     setNewEmail(e.target.value);
+  }
+
+  const handleOldPassword = (e) => {
+    setOldPassword(e.target.value);
+  }
+
+  const handleNewPassword = (e) => {
+    setNewPassword(e.target.value);
+  }
+
+  const handleNewPasswordConfirmation = (e) => {
+    setNewPasswordConfirmation(e.target.value);
+  }
+
+  const handleUpdateUserName = () => {
+    const auth = getAuth();
+    const normalizedName = newName.split(' ').map((name) => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+    updateProfile(auth.currentUser, {
+      displayName: normalizedName
+    }).then(() => {
+      setContextState(prevState => ({ ...prevState, displayName: normalizedName }))
+      toggleEditName(!editingName)
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const handleUpdateUserEmail = () => {
+    const auth = getAuth();
+    const email = newEmail.toLocaleLowerCase();
+    updateEmail(auth.currentUser, email).then(() => {
+      toggleEditEmail(!editingEmail)
+      signOut(auth).then(() => {
+        navigation('/')
+      })
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const handleUpdatePassword = () => {
+    const auth = getAuth();
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      oldPassword
+    )
+    if (newPassword !== newPasswordConfirmation) {
+      setPasswordDoesNotMatch(true);
+      return;
+    }
+    reauthenticateWithCredential(auth.currentUser, credential)
+    .then(() => {
+      updatePassword(auth.currentUser, newPassword);
+      signOut(auth).then(() => navigation('/'))
+    })
+    .catch((e) => {
+      if (e.message === 'Firebase: Error (auth/wrong-password).') {
+        setOldPasswordWrong(true);
+      }
+    });
   }
 
   return (
@@ -39,7 +123,7 @@ const Settings = () => {
             <div onClick={toggleEditName} style={{ display: editingName ? 'none' : 'block', width: '100%' }}>
               <div className="li-content">
                 <span className="li-header header">Name</span>
-                <p className="li-content-p">Patren</p>
+                <p className="li-content-p">{contextState.displayName}</p>
                 <span className="li-edit">Edit</span>
               </div>
             </div>
@@ -54,7 +138,7 @@ const Settings = () => {
                     <strong style={{ color: '#1C1E21' }}>Observation:</strong> if you change your Mind Organizer name you won't be able to change again before 60 days
                   </div>
                   <div className="buttons-container">
-                    <button className="button-editing confirm-edit">Confirm changes</button>
+                    <button className="button-editing confirm-edit" onClick={handleUpdateUserName}>Confirm changes</button>
                     <button className="button-editing cancel-edit" onClick={toggleEditName}>Cancel</button>
                   </div>
                 </div>
@@ -66,7 +150,7 @@ const Settings = () => {
             <div onClick={toggleEditEmail} style={{ display: editingEmail ? 'none' : 'block', width: '100%' }}>
               <div className="li-content">
                 <span className="li-header header">Email</span>
-                <p className="li-content-p">devcaiofelipe15@gmail.com</p>
+                <p className="li-content-p">{contextState.email}</p>
                 <span className="li-edit">Edit</span>
               </div>
             </div>
@@ -81,8 +165,45 @@ const Settings = () => {
                     <p>We'll use this email to send you marketing updates and notifications about your personal account</p>
                   </div>
                   <div className="buttons-container">
-                    <button className="button-editing confirm-edit">Confirm changes</button>
+                    <button className="button-editing confirm-edit" onClick={handleUpdateUserEmail}>Confirm changes</button>
                     <button className="button-editing cancel-edit" onClick={toggleEditEmail}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li className="li-box">
+          <div onClick={toggleEditPassword} style={{ display: editingPassword ? 'none' : 'block', width: '100%' }}>
+              <div className="li-content">
+                <span className="li-header header">Password</span>
+                <p className="li-content-p">Change your password</p>
+                <span className="li-edit">Edit</span>
+              </div>
+            </div>
+            <div className="li-content-edit-password" style={{ display: !editingPassword ? 'none' : 'block', width: '100%' }}>
+              <div className="li-main-content">
+                <div className="edit-password-header header">Password</div>
+                <div className="main-password-container">
+                  <div className="main-password-content">
+                    <div className="tittle-password-names message-color">
+                      <label htmlFor="old-password">Old Password</label>
+                      <label htmlFor="new-password">New Password</label>
+                      <label htmlFor="confirmation-password">Confirmation Password</label>
+                    </div>
+                    <div className="tittle-password-inputs">
+                      <input type="password" className="input-edit" id="old-password" onChange={handleOldPassword}/>
+                      <input type="password" className="input-edit" id="new-password" onChange={handleNewPassword}/>
+                      <input type="password" className="input-edit" id="confirmation-password" onChange={handleNewPasswordConfirmation}/>
+                    </div>
+                  </div>
+                  <ul>
+                    { oldPasswordWrong && <li className="error-message">Wrong old password</li>}
+                    { passwordDoesNotMatch && <li className="error-message">Passwords does not match</li> }
+                  </ul>
+                  
+                  <div className="buttons-container">
+                    <button className="button-editing confirm-edit" onClick={handleUpdatePassword}>Confirm changes</button>
+                    <button className="button-editing cancel-edit" onClick={toggleEditPassword}>Cancel</button>
                   </div>
                 </div>
               </div>

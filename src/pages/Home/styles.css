@@ -309,6 +309,9 @@ body {
 .logout-container {
   position: relative;
 }
+.logout-container:hover {
+  cursor: pointer;
+}
 
 .user-dropdown {
   display: flex;
