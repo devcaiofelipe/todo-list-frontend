@@ -9,7 +9,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
@@ -33,25 +33,7 @@ const Home = () => {
   const [dropdown, setDropdown] = useState(false);
   const { contextState, setContextState } = useContext(GlobalContext)
 
-  useEffect(() => {
-    setLoadingContent(true);
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        handleUserInfo(user.uid, user.displayName, user.email);
-        getAllTasks(user.uid)
-      } else {
-        console.log('user not found')
-        navigation('')
-      }
-    });
-  }, [navigation])
-
-  const toggleDropdown = () => {
-    setDropdown(!dropdown);
-  }
-
-  const handleUserInfo = async (userId, displayName, email) => {
+  const handleUserInfo = useCallback(async (userId, displayName, email) => {
     try {
       const storage = getStorage();
       const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
@@ -68,6 +50,24 @@ const Home = () => {
     } finally {
       setContextState(prevState => ({ ...prevState, displayName }))
     }
+  }, [setContextState])
+
+  useEffect(() => {
+    setLoadingContent(true);
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleUserInfo(user.uid, user.displayName, user.email);
+        getAllTasks(user.uid)
+      } else {
+        console.log('user not found')
+        navigation('')
+      }
+    });
+  }, [navigation, handleUserInfo])
+
+  const toggleDropdown = () => {
+    setDropdown(!dropdown);
   }
 
   const handleSearchInput = (e) => {
