@@ -1,7 +1,7 @@
 import './styles.css';
 import { useState, useContext } from 'react';
-import { AiOutlineCopyrightCircle } from 'react-icons/ai'
-import { BsTrash } from 'react-icons/bs'
+import { AiOutlineCopyrightCircle } from 'react-icons/ai';
+import { BsTrash } from 'react-icons/bs';
 import { GlobalContext } from '../../index';
 import { 
   getAuth, 
@@ -13,6 +13,12 @@ import {
   updatePassword
  } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { MdAddAPhoto } from 'react-icons/md';
+import { ref, uploadBytes } from 'firebase/storage';
+import defaultLogo from '../../assets/defaultLogo.jpg';
+import { ref as refDatabase, getDownloadURL } from 'firebase/storage';
+import storage from '../../shared/firebaseStorage';
+
 
 const Settings = () => {
   const [editingName, setEditingName] = useState(false);
@@ -26,6 +32,7 @@ const Settings = () => {
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('');
   const [passwordDoesNotMatch, setPasswordDoesNotMatch] = useState(false);
   const [oldPasswordWrong, setOldPasswordWrong] = useState(false);
+  const [userProfilePicture, setProfilePicture] = useState(null);
 
   const { contextState, setContextState }= useContext(GlobalContext);
   const navigation = useNavigate();
@@ -62,6 +69,10 @@ const Settings = () => {
 
   const handleNewPasswordConfirmation = (e) => {
     setNewPasswordConfirmation(e.target.value);
+  }
+
+  const handleProfilePicture = (e) => {
+    setProfilePicture(e.target.files[0])
   }
 
   const handleUpdateUserName = () => {
@@ -112,11 +123,48 @@ const Settings = () => {
     });
   }
 
+  const updateProfilePicture = async () => {
+    const auth = getAuth();
+    if (userProfilePicture) {
+      const pathRef = ref(storage, `pictures/${auth.currentUser.uid}/photo.png`);
+      const result = await uploadBytes(pathRef, userProfilePicture).catch((e) => console.log('errorr', e))
+      const photoURL = result.metadata.fullPath;
+      await updateProfile(auth.currentUser, {
+        photoURL,
+      })
+      const pathReference = refDatabase(storage, `pictures/${auth.currentUser.uid}/photo.png`);
+      const url = await getDownloadURL(pathReference)
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+        setContextState(prevState => ({ ...prevState, photoURL: xhr.response }))
+      };
+      xhr.open('GET', url);
+      xhr.send();
+      setProfilePicture(null)
+    } 
+  }
+
+  const definePicture = () => {
+    if (userProfilePicture) return userProfilePicture;
+    if (contextState.photoURL) return contextState.photoURL;
+    return false;
+  }
+
   return (
     <div className="settings-container">
       <div className="settings-content">
         <div className="settings-header">
           <h2>General Settings</h2>
+          <div className="update-picture">
+            <label htmlFor="add-picture-settings">
+              <MdAddAPhoto className="camera-icon-settings"/>
+            </label>
+            <input style={{ display: 'none' }} type="file" id="add-picture-settings" onChange={handleProfilePicture}/>
+            <img src={ definePicture() ? URL.createObjectURL(definePicture()) : defaultLogo} alt="logo" className="profile-picture-settings"/>
+            { userProfilePicture && <button onClick={updateProfilePicture}>Confirm</button> }
+          </div>
+          
         </div>
         <ul className="ul-container">
           <li className="li-box">
