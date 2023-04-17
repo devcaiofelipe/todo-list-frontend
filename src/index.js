@@ -29,7 +29,8 @@ const router = createBrowserRouter([
 const globalState = {
   displayName: 'Anonymous',
   email: 'anonymous@email.com',
-  photoURL: ''
+  photoURL: '',
+  isGoogleAuth: false,
 }
 
 export const GlobalContext = React.createContext(globalState);

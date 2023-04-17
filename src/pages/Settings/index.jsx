@@ -21,7 +21,6 @@ import { ref as refDatabase, getDownloadURL } from 'firebase/storage'
 import defaultLogo from '../../assets/defaultLogo.jpeg';
 import storage from '../../shared/firebaseStorage';
 
-
 const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);

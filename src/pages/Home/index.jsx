@@ -33,18 +33,25 @@ const Home = () => {
   const [dropdown, setDropdown] = useState(false);
   const { contextState, setContextState } = useContext(GlobalContext)
 
-  const handleUserInfo = useCallback(async (userId, displayName, email) => {
+  const handleUserInfo = useCallback((userId, displayName, email, photoURL, isGoogleAuth) => {
     try {
-      const storage = getStorage();
-      const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-      const url = await getDownloadURL(pathReference)
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-        setContextState({ displayName, email, photoURL: xhr.response })
-      };
-      xhr.open('GET', url);
-      xhr.send();
+      if (!isGoogleAuth) {
+        const storage = getStorage();
+        const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
+      
+        getDownloadURL(pathReference).then((url) => {
+          const xhr = new XMLHttpRequest();
+          xhr.responseType = 'blob';
+          xhr.onload = (event) => {
+            setContextState({ displayName, email, photoURL: xhr.response, isGoogleAuth })
+          };
+          xhr.open('GET', url);
+          xhr.send();
+        })
+      } else {
+        setContextState({ displayName, email, photoURL, isGoogleAuth })
+      }
+      
     } catch (e) {
       console.error(e);
     } finally {
@@ -57,7 +64,8 @@ const Home = () => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        handleUserInfo(user.uid, user.displayName, user.email);
+        const isGogleAuth = auth.currentUser.providerData[0].providerId === 'google.com';
+        handleUserInfo(user.uid, user.displayName, user.email, user.photoURL,isGogleAuth);
         getAllTasks(user.uid)
       } else {
         console.log('user not found')
@@ -260,7 +268,7 @@ const Home = () => {
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
         <div className="logout-container">
-          <img src={ contextState.photoURL ? URL.createObjectURL(contextState.photoURL) : defaultLogo} alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
+          <img src={ contextState.isGoogleAuth ?  contextState.photoURL : contextState.photoURL ? URL.createObjectURL(contextState.photoURL) : defaultLogo } alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
           { dropdown ? <MdKeyboardArrowUp className="logout-icon" onClick={toggleDropdown}/> : <MdKeyboardArrowDown className="logout-icon" onClick={toggleDropdown}/>}
           <div className="user-dropdown" style={{ display: dropdown ? 'block' : 'none'}}>
             <div className="user-dropdown-content">

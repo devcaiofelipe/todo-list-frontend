@@ -5,13 +5,19 @@ import firebase from '../../shared/firebase';
 import { useState, useEffect } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  updateProfile, 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
+ } from 'firebase/auth';
 import { ref, uploadBytes } from 'firebase/storage';
 import { MdAddAPhoto } from 'react-icons/md';
 import { TfiGoogle } from 'react-icons/tfi';
 import { FiLogIn } from 'react-icons/fi';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-
 
 const auth = getAuth(firebase); 
 
@@ -134,13 +140,15 @@ const Login = () => {
         const result = await uploadBytes(pathRef, userProfilePicture);
         photoURL = result.metadata.fullPath;
       }
-      
+      console.log('userName', userName);
       await updateProfile(newUser.user.auth.currentUser, {
         displayName: userName,
         ...(photoURL && { photoURL }),
         disabled: false,
+      }).then(async () => {
+        await login(userEmail, userPassword);
       })
-      await login(userEmail, userPassword);
+      
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
         setWrongEmail(true)
@@ -148,6 +156,37 @@ const Login = () => {
     } finally {
       setCreateUserLoading(false);
     }
+  }
+
+  const handleLoginWithGoogle = () => {
+    console.log('google')
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+        console.log(token)
+        console.log(user)
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode);
+        console.log(errorMessage);
+        console.log(email);
+        console.log(credential);
+        // ...
+      });
   }
 
   const handleEmail = (e) => {
@@ -197,14 +236,14 @@ const Login = () => {
               { passwordInvisible ? <AiFillEye className="eye-icon-invisible" onClick={togglePasswordVisible}/> : <AiFillEyeInvisible className="eye-icon-invisible" onClick={togglePasswordVisible}/>}
             </div>
             
-            { <p className="error-message" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}
+            { <p className="error-message-1" style={ wrongCredentials ? { display: 'block' } : { visibility: 'hidden'}}>E-mail or password invalid</p>}
             <button type="submit" className="signin-button" style={!email || !password ? {
               backgroundColor: 'rgb(177, 177, 177)',
               color: 'black',
               cursor: 'default'
             } : null } disabled={!email || !password}>{ loginLoad ? <span className="loader"></span> : 'Sign in' }</button>
-            <button className="signin-with-google"><TfiGoogle className="google-icon"/>Sign in with google</button>
           </form>
+          <button className="signin-with-google" onClick={handleLoginWithGoogle}><TfiGoogle className="google-icon"/>Sign in with google</button>
           <div className="create-account">
             <p>Don't have an account?</p>
             <button onClick={toggleScreen}>Sign up</button>
@@ -219,7 +258,6 @@ const Login = () => {
             </label>
             <input type="file" id="add-picture" onChange={handleProfilePicture}/>
             <img src={ userProfilePicture ? URL.createObjectURL(userProfilePicture) : defaultLogo } alt="logo" className="profile-picture"/>
-            
           </div>
           <form action="#" className="create-form" onSubmit={handleCreateUser}>
             <label htmlFor="input" className="label">Name</label>
