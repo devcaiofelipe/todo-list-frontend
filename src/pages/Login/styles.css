@@ -130,7 +130,7 @@
 }
 
 .signin-button {
-  padding: 20px;
+  height: 15%;
   font-family: 'Cabin', sans-serif;
   font-size: 16px;
   background-color: #444791;
@@ -159,7 +159,7 @@
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  }
+}
 
 @keyframes rotation {
   0% { transform: rotate(0deg) }
@@ -170,7 +170,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* margin-bottom: 10px; */
 }
 
 .create-account p {
@@ -311,7 +310,7 @@
   display: flex;
   font-family: 'Cabin', sans-serif;
   font-size: 16px;
-  padding: 20px;
+  height: 15%;
   border-radius: 8px;
   border: none;
   justify-content: center;
@@ -324,14 +323,10 @@
   cursor: pointer;
   margin-bottom: 40px;
 }
-/* height: 50px;
-  font-family: 'Cabin', sans-serif;
-  font-size: 16px;
-  background-color: #444791;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  cursor: pointer; */
+
+.signin-with-google:hover {
+  background-color: #cf3d18;
+}
 
 .google-icon {
   font-size: 20px;
