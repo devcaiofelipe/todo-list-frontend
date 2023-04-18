@@ -34,6 +34,7 @@ const Home = () => {
   const { contextState, setContextState } = useContext(GlobalContext)
 
   const handleUserInfo = useCallback((userId, displayName, email, photoURL, isGoogleAuth) => {
+    console.log('params', userId, displayName, email, photoURL, isGoogleAuth);
     try {
       if (!isGoogleAuth) {
         const storage = getStorage();
@@ -43,29 +44,33 @@ const Home = () => {
           const xhr = new XMLHttpRequest();
           xhr.responseType = 'blob';
           xhr.onload = (event) => {
+            console.log('if', { displayName, email, photoURL: xhr.response, isGoogleAuth })
             setContextState({ displayName, email, photoURL: xhr.response, isGoogleAuth })
           };
           xhr.open('GET', url);
           xhr.send();
         })
       } else {
+        console.log('else', { displayName, email, photoURL, isGoogleAuth })
         setContextState({ displayName, email, photoURL, isGoogleAuth })
       }
-      
     } catch (e) {
       console.error(e);
     } finally {
-      setContextState(prevState => ({ ...prevState, displayName }))
+      console.log('finally', { displayName })
+      setContextState(prevState => ({ ...prevState, displayName: 'a' }))
     }
   }, [setContextState])
 
   useEffect(() => {
     setLoadingContent(true);
     const auth = getAuth();
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log('entrei no on auth state change')
         const isGogleAuth = auth.currentUser.providerData[0].providerId === 'google.com';
-        handleUserInfo(user.uid, user.displayName, user.email, user.photoURL,isGogleAuth);
+        handleUserInfo(user.uid, auth.currentUser.displayName, user.email, user.photoURL, isGogleAuth);
         getAllTasks(user.uid)
       } else {
         console.log('user not found')

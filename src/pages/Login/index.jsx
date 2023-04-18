@@ -19,7 +19,7 @@ import { TfiGoogle } from 'react-icons/tfi';
 import { FiLogIn } from 'react-icons/fi';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
-const auth = getAuth(firebase); 
+// const auth = getAuth(firebase); 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -44,16 +44,14 @@ const Login = () => {
   const navigation = useNavigate();
 
   useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    if (!isSigned) {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
       if (user) {
         navigation('home')
       } else {}
     });
-  }, [navigation])
-
-  useEffect(() => {
-    if (isSigned) {
+    } else if (isSigned) {
       navigation('home')
     }
   }, [isSigned, navigation])
@@ -74,10 +72,13 @@ const Login = () => {
   }
 
   const login = async (userEmail, userPassword) => {
+    console.log('userEmail', userEmail);
+    console.log('userPassword', userPassword);
     setLoginLoad(true)
     const emailToLogin = userEmail || email;
     const passwordToLogin = userPassword || password;
     try {
+      const auth = getAuth(firebase); 
       const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
       const token = userCredential.accessToken;
       localStorage.setItem('token', token);
@@ -127,28 +128,32 @@ const Login = () => {
     return containsError;
   }
 
-  const handleCreateUser = async (e) => {
+  const handleCreateUser = (e) => {
     e.preventDefault();
     const hasError = validateCreateInputs();
     if (hasError) return;
     try {
       setCreateUserLoading(true);
-      const newUser = await createUserWithEmailAndPassword(auth, userEmail.toLocaleLowerCase(), userPassword)
-      let photoURL = null;
-      if (userProfilePicture) {
-        const pathRef = ref(storage, `pictures/${newUser.user.auth.currentUser.uid}/photo.png`);
-        const result = await uploadBytes(pathRef, userProfilePicture);
-        photoURL = result.metadata.fullPath;
-      }
-      console.log('userName', userName);
-      await updateProfile(newUser.user.auth.currentUser, {
-        displayName: userName,
-        ...(photoURL && { photoURL }),
-        disabled: false,
-      }).then(async () => {
-        await login(userEmail, userPassword);
-      })
+      const auth = getAuth(firebase); 
+      createUserWithEmailAndPassword(auth, userEmail.toLocaleLowerCase(), userPassword)
+      .then((newUser) => {
+        let photoURL = null;
+        if (userProfilePicture) {
+          const pathRef = ref(storage, `pictures/${newUser.user.auth.currentUser.uid}/photo.png`);
+          uploadBytes(pathRef, userProfilePicture)
+          .then((result) => {
+            photoURL = result.metadata.fullPath;
+          })
+        }
+        updateProfile(newUser.user.auth.currentUser, {
+          displayName: userName,
+          ...(photoURL && { photoURL }),
+          disabled: false,
+        }).then(async () => {
+          await login(userEmail, userPassword);
+        })
       
+      })
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
         setWrongEmail(true)
@@ -239,7 +244,7 @@ const Login = () => {
           </div>
           <form action="#" className="create-form" onSubmit={handleCreateUser}>
             <label htmlFor="input" className="label">Name</label>
-            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName}/>
+            <input type="text" className="creation-account-input" placeholder="Your name" onChange={handleUserName} style={{ backgroundColor: userName ? '#ebebf5' : 'white' }}/>
             <label htmlFor="input" className="label" style={ wrongEmail ? {
               color: '#FF0839',
             } : null}>E-mail</label>
