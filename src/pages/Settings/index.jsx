@@ -146,12 +146,6 @@ const Settings = () => {
     }
   }
 
-  const definePicture = () => {
-    if (userProfilePicture) return userProfilePicture;
-    if (contextState.photoURL) return contextState.photoURL;
-    return false;
-  }
-
   const handleSignOut = () => {
     const auth = getAuth();
     signOut(auth).then(() => {
