@@ -171,7 +171,7 @@ const Settings = () => {
                 <MdAddAPhoto className="camera-icon-settings" />
               </label>
               <input style={{ display: 'none' }} type="file" id="add-picture-settings" onChange={handleProfilePicture} />
-              <img src={contextState.isGoogleAuth ?  contextState.photoURL : contextState.photoURL ? URL.createObjectURL(contextState.photoURL) : defaultLogo} alt="logo" className="profile-picture-settings" />
+              <img src={ contextState.photoURL ? contextState.photoURL : defaultLogo } alt="logo" className="profile-picture-settings" />
               {userProfilePicture && <button onClick={updateProfilePicture}>Confirm</button>}
             </div>
 

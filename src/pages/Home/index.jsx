@@ -41,14 +41,16 @@ const Home = () => {
         const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
       
         getDownloadURL(pathReference).then((url) => {
-          const xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = (event) => {
-            console.log('if', { displayName, email, photoURL: xhr.response, isGoogleAuth })
-            setContextState({ displayName, email, photoURL: xhr.response, isGoogleAuth })
-          };
-          xhr.open('GET', url);
-          xhr.send();
+          setContextState({ displayName, email, photoURL: url, isGoogleAuth })
+          // console.log('URL', url)
+          // const xhr = new XMLHttpRequest();
+          // xhr.responseType = 'blob';
+          // xhr.onload = (event) => {
+          //   console.log('if', { displayName, email, photoURL: url, isGoogleAuth })
+            
+          // };
+          // xhr.open('GET', url);
+          // xhr.send();
         })
       } else {
         console.log('else', { displayName, email, photoURL, isGoogleAuth })
@@ -56,9 +58,6 @@ const Home = () => {
       }
     } catch (e) {
       console.error(e);
-    } finally {
-      console.log('finally', { displayName })
-      setContextState(prevState => ({ ...prevState, displayName: 'a' }))
     }
   }, [setContextState])
 
@@ -273,7 +272,7 @@ const Home = () => {
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
         <div className="logout-container">
-          <img src={ contextState.isGoogleAuth ?  contextState.photoURL : contextState.photoURL ? URL.createObjectURL(contextState.photoURL) : defaultLogo } alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
+          <img src={ contextState.photoURL ? contextState.photoURL : defaultLogo } alt="logo" className="profile-picture-home" onClick={toggleDropdown}/>
           { dropdown ? <MdKeyboardArrowUp className="logout-icon" onClick={toggleDropdown}/> : <MdKeyboardArrowDown className="logout-icon" onClick={toggleDropdown}/>}
           <div className="user-dropdown" style={{ display: dropdown ? 'block' : 'none'}}>
             <div className="user-dropdown-content">
