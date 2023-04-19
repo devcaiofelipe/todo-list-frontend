@@ -33,49 +33,50 @@ const Home = () => {
   const [dropdown, setDropdown] = useState(false);
   const { contextState, setContextState } = useContext(GlobalContext)
 
-  const handleUserInfo = useCallback((userId, displayName, email, photoURL, isGoogleAuth) => {
-    console.log('params', userId, displayName, email, photoURL, isGoogleAuth);
+
+  const handleUserInfo = useCallback((user) => {
+    const userId = user.uid;
+    const displayName = user.displayName;
+    const email = user.email;
+    const photoURL = user.photoURL;
+    const isGoogleAuth = user.providerId === 'google.com';
     try {
       if (!isGoogleAuth) {
         const storage = getStorage();
         const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
       
         getDownloadURL(pathReference).then((url) => {
-          setContextState({ displayName, email, photoURL: url, isGoogleAuth })
-          // console.log('URL', url)
-          // const xhr = new XMLHttpRequest();
-          // xhr.responseType = 'blob';
-          // xhr.onload = (event) => {
-          //   console.log('if', { displayName, email, photoURL: url, isGoogleAuth })
-            
-          // };
-          // xhr.open('GET', url);
-          // xhr.send();
+          setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
         })
       } else {
-        console.log('else', { displayName, email, photoURL, isGoogleAuth })
-        setContextState({ displayName, email, photoURL, isGoogleAuth })
+        setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
       }
     } catch (e) {
       console.error(e);
     }
   }, [setContextState])
+  
 
   useEffect(() => {
     setLoadingContent(true);
-    const auth = getAuth();
+    
+    setTimeout(() => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth: user.providerId === 'google.com' })
+          handleUserInfo(user);
+          getAllTasks(user.uid)
+        } else {
+          navigation('/')
+        }
+        getAllTasks(contextState.uid);
+      });
+      setLoadingContent(false);
+    }, 500)
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('entrei no on auth state change')
-        const isGogleAuth = auth.currentUser.providerData[0].providerId === 'google.com';
-        handleUserInfo(user.uid, auth.currentUser.displayName, user.email, user.photoURL, isGogleAuth);
-        getAllTasks(user.uid)
-      } else {
-        navigation('/')
-      }
-    });
-  }, [navigation, handleUserInfo])
+    
+  }, [navigation, handleUserInfo, contextState.uid, setContextState])
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);

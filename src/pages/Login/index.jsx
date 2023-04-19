@@ -2,7 +2,7 @@ import './styles.css'
 import defaultLogo from '../../assets/defaultLogo.jpeg'
 import storage from '../../shared/firebaseStorage'
 import firebase from '../../shared/firebase';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { RiTodoLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, 
@@ -18,7 +18,8 @@ import { MdAddAPhoto } from 'react-icons/md';
 import { TfiGoogle } from 'react-icons/tfi';
 import { FiLogIn } from 'react-icons/fi';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-
+import { GlobalContext } from '../../index';
+import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 // const auth = getAuth(firebase); 
 
 const Login = () => {
@@ -40,14 +41,41 @@ const Login = () => {
   const [createUserLoading, setCreateUserLoading] = useState(false);
 
   const [passwordInvisible, setPasswordInvisible] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const { contextState, setContextState } = useContext(GlobalContext)
 
   const navigation = useNavigate();
+
+  const handleUserInfo = useCallback((user) => {
+    const userId = user.uid;
+    const displayName = user.displayName;
+    const email = user.email;
+    const photoURL = user.photoURL;
+    const isGoogleAuth = user.providerId === 'google.com';
+    try {
+      if (!isGoogleAuth) {
+        const storage = getStorage();
+        const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
+      
+        getDownloadURL(pathReference).then((url) => {
+          setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
+        })
+      } else {
+        setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [setContextState])
 
   useEffect(() => {
     if (!isSigned) {
       const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log('on auth stage login', user)
+        console.log('on auth stage login', user.photoURL);
+        handleUserInfo(user);
         navigation('home')
       } else {
         navigation('/')
@@ -56,7 +84,7 @@ const Login = () => {
     } else if (isSigned) {
       navigation('home')
     }
-  }, [isSigned, navigation])
+  }, [isSigned, navigation, handleUserInfo])
 
   const handleUserName = (e) => setUserName(e.target.value);
   const handleUserEmail = (e) => setUserEmail(e.target.value);

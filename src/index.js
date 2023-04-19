@@ -27,6 +27,7 @@ const router = createBrowserRouter([
 ]);
 
 const globalState = {
+  uid: null,
   displayName: 'Anonymous',
   email: 'anonymous@email.com',
   photoURL: '',
