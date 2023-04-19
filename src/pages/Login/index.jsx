@@ -49,7 +49,9 @@ const Login = () => {
       onAuthStateChanged(auth, (user) => {
       if (user) {
         navigation('home')
-      } else {}
+      } else {
+        navigation('/')
+      }
     });
     } else if (isSigned) {
       navigation('home')
@@ -72,8 +74,6 @@ const Login = () => {
   }
 
   const login = async (userEmail, userPassword) => {
-    console.log('userEmail', userEmail);
-    console.log('userPassword', userPassword);
     setLoginLoad(true)
     const emailToLogin = userEmail || email;
     const passwordToLogin = userPassword || password;

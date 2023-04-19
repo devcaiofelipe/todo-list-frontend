@@ -72,8 +72,7 @@ const Home = () => {
         handleUserInfo(user.uid, auth.currentUser.displayName, user.email, user.photoURL, isGogleAuth);
         getAllTasks(user.uid)
       } else {
-        console.log('user not found')
-        navigation('')
+        navigation('/')
       }
     });
   }, [navigation, handleUserInfo])
