@@ -107,9 +107,7 @@ const Login = () => {
     const passwordToLogin = userPassword || password;
     try {
       const auth = getAuth(firebase); 
-      const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
-      const token = userCredential.accessToken;
-      localStorage.setItem('token', token);
+      await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
       setIsSigned(true);
     } catch (error) {
       console.error(error);

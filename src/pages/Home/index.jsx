@@ -39,15 +39,15 @@ const Home = () => {
     const displayName = user.displayName;
     const email = user.email;
     const photoURL = user.photoURL;
-    const isGoogleAuth = user.providerId === 'google.com';
+    const isGoogleAuth = user.providerData[0].providerId === 'google.com';
     try {
       if (!isGoogleAuth) {
         const storage = getStorage();
         const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-      
         getDownloadURL(pathReference).then((url) => {
           setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
         })
+        .catch((e) => console.log('errorr', e))
       } else {
         setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
       }
