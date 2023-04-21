@@ -9,6 +9,8 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 
 
 const router = createBrowserRouter([
@@ -40,6 +42,27 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const App = () => {
   const [contextState, setContextState] = React.useState(globalState);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      console.log('Passei no auth do app main')
+      if (user) { 
+        const isGoogleAuth = user.providerData[0].providerId === 'google.com'
+        const storage = getStorage();
+        const pathReference = refDatabase(storage, `pictures/${user.uid}/photo.png`);
+        
+        if (!isGoogleAuth) {
+          getDownloadURL(pathReference).then((url) => {
+            setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: url, isGoogleAuth })
+          })
+          return;
+        }
+        setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth })
+      }
+    })
+  }, [])
+
   return (
     <GlobalContext.Provider value={{ contextState, setContextState }}>
       <React.StrictMode>

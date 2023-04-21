@@ -10,7 +10,7 @@ import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
 import { useState, useEffect, useContext, useCallback } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import { LoadingContent } from '../../components/LoadingContent/index';
@@ -34,49 +34,36 @@ const Home = () => {
   const { contextState, setContextState } = useContext(GlobalContext)
 
 
-  const handleUserInfo = useCallback((user) => {
-    const userId = user.uid;
-    const displayName = user.displayName;
-    const email = user.email;
-    const photoURL = user.photoURL;
-    const isGoogleAuth = user.providerData[0].providerId === 'google.com';
-    try {
-      if (!isGoogleAuth) {
-        const storage = getStorage();
-        const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-        getDownloadURL(pathReference).then((url) => {
-          setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
-        })
-        .catch((e) => console.log('errorr', e))
-      } else {
-        setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [setContextState])
+  // const handleUserInfo = useCallback((user) => {
+  //   const userId = user.uid;
+  //   const displayName = user.displayName;
+  //   const email = user.email;
+  //   const photoURL = user.photoURL;
+  //   const isGoogleAuth = user.providerData[0].providerId === 'google.com';
+  //   try {
+  //     if (!isGoogleAuth) {
+  //       const storage = getStorage();
+  //       const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
+  //       console.log('pathhhh', pathReference);
+  //       getDownloadURL(pathReference).then((url) => {
+  //         // setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
+  //       })
+  //       .catch((e) => console.log('errorr', e))
+  //     } else {
+  //       // setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, [setContextState])
   
 
   useEffect(() => {
+    console.log('passei no use effect');
     setLoadingContent(true);
-    
-    setTimeout(() => {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth: user.providerId === 'google.com' })
-          handleUserInfo(user);
-          getAllTasks(user.uid)
-        } else {
-          navigation('/')
-        }
-        getAllTasks(contextState.uid);
-      });
-      setLoadingContent(false);
-    }, 500)
-
-    
-  }, [navigation, handleUserInfo, contextState.uid, setContextState])
+    getAllTasks(contextState.uid)
+    setLoadingContent(false);
+  }, [])
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -103,14 +90,11 @@ const Home = () => {
           status: snapshot.val()[key].status,
         }))
         setTasks(normalizedTasks);
-        setLoadingContent(false);
       } else {
         setTasks([]);
-        setLoadingContent(false);
       }
     }).catch((error) => {
       console.error('somee error', error);
-      setLoadingContent(false);
     });
   }
 
@@ -264,10 +248,15 @@ const Home = () => {
     return resultLength > 0;
   }
 
+  // if (loadingContent) {
+  //   return 
+  // }
+
   return (
     <div className="container">
 
-      { loadingContent && <LoadingContent/>}
+
+      {loadingContent && <LoadingContent/> }
 
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>

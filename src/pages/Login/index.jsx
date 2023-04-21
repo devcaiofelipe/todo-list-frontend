@@ -56,11 +56,12 @@ const Login = () => {
       if (!isGoogleAuth) {
         const storage = getStorage();
         const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-      
+        console.log('paath', pathReference);
         getDownloadURL(pathReference).then((url) => {
           setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
         })
       } else {
+        console.log()
         setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
       }
     } catch (e) {
@@ -73,9 +74,6 @@ const Login = () => {
       const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log('on auth stage login', user)
-        console.log('on auth stage login', user.photoURL);
-        handleUserInfo(user);
         navigation('home')
       } else {
         navigation('/')
@@ -84,7 +82,7 @@ const Login = () => {
     } else if (isSigned) {
       navigation('home')
     }
-  }, [isSigned, navigation, handleUserInfo])
+  }, [isSigned, navigation])
 
   const handleUserName = (e) => setUserName(e.target.value);
   const handleUserEmail = (e) => setUserEmail(e.target.value);
