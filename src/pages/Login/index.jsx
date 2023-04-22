@@ -71,15 +71,17 @@ const Login = () => {
 
   useEffect(() => {
     if (!isSigned) {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation('home')
-      } else {
-        navigation('/')
-      }
-    });
+      navigation('/')
+      // const auth = getAuth();
+      // onAuthStateChanged(auth, (user) => {
+      //   if (user) {
+      //     navigation('home')
+      //   } else {
+      //     navigation('/')
+      //   }
+      // });
     } else if (isSigned) {
+      // const auth = getAuth();
       navigation('home')
     }
   }, [isSigned, navigation])
@@ -101,19 +103,22 @@ const Login = () => {
 
   const login = async (userEmail, userPassword) => {
     setLoginLoad(true)
-    const emailToLogin = userEmail || email;
-    const passwordToLogin = userPassword || password;
-    try {
-      const auth = getAuth(firebase); 
-      await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
-      setIsSigned(true);
-    } catch (error) {
-      console.error(error);
-      setWrongCredentials(true);
-      setIsSigned(false);
-    } finally {
-      setLoginLoad(false);
-    } 
+    setTimeout(async () => {
+       const emailToLogin = userEmail || email;
+        const passwordToLogin = userPassword || password;
+        try {
+          const auth = getAuth(firebase); 
+          await signInWithEmailAndPassword(auth, emailToLogin, passwordToLogin)
+          setIsSigned(true);
+        } catch (error) {
+          console.error('error 4', error);
+          setWrongCredentials(true);
+          setIsSigned(false);
+        } finally {
+          setLoginLoad(false);
+        } 
+    }, 1500)
+   
   }
 
   const handleLogin = async (e) => {
@@ -168,15 +173,16 @@ const Login = () => {
           .then((result) => {
             photoURL = result.metadata.fullPath;
           })
+          .catch((e) => console.log('error 2', e))
         }
         updateProfile(newUser.user.auth.currentUser, {
           displayName: userName,
           ...(photoURL && { photoURL }),
           disabled: false,
         }).then(async () => {
-          await login(userEmail, userPassword);
+          setIsLoginScreen(true);
         })
-      
+        .catch(e => console.log('error 1', e))
       })
     } catch (e) {
       if (e.message === 'Firebase: Error (auth/invalid-email).') {
@@ -191,7 +197,9 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     signInWithPopup(auth, provider)
+    .then(() => navigation('home'))
     .catch((error) => {
+      console.log('error 3', error)
       navigation('/')
     });
   }

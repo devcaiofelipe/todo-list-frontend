@@ -74,12 +74,9 @@ const Home = () => {
   }
 
   const getAllTasks = (userIdSupplied) => {
-    const auth = getAuth();
-    const userId = userIdSupplied || auth.currentUser?.uid;
     const dbRef = ref(getDatabase(firebase));
     
-    const currentUser = userId ? userId : localStorage.getItem('userId')
-    localStorage.setItem('userId', userId);
+    const currentUser = userIdSupplied
     get(child(dbRef, `tasks/${currentUser}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const keys = Object.keys(snapshot.val())
@@ -136,28 +133,24 @@ const Home = () => {
       alert('You must type anything');
       return;
     }
-    const auth = getAuth()
-    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
-    const taskListRef = ref(db, `tasks/${currentUser}`);
+    const taskListRef = ref(db, `tasks/${contextState.uid}`);
     const newTaskRef = push(taskListRef);
     set(newTaskRef, {
       description: task,
       checked: false,
       status: 'in-progress'
     });
-    getAllTasks(auth.currentUser?.uid)
+    getAllTasks(contextState.uid)
     setFilterChoise('all')
     setTask('');
   }
 
   const handleDeleteTask = (taskId) => {
-    const auth = getAuth()
-    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     
-    remove(ref(db, `tasks/${currentUser}/${taskId}`)).then(() => {
-      getAllTasks(auth.currentUser?.uid);
+    remove(ref(db, `tasks/${contextState.uid}/${taskId}`)).then(() => {
+      getAllTasks(contextState.uid);
       toggleDeleteModal()
     })
   }
@@ -177,14 +170,12 @@ const Home = () => {
   }
 
   const handleDeleteAll = () => {
-    const auth = getAuth()
-    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     tasks.forEach((task) => {
       if (task.checked) {
-        remove(ref(db, `tasks/${currentUser}/${task.id}`))
+        remove(ref(db, `tasks/${contextState.uid}/${task.id}`))
         .then(() => {
-          getAllTasks(auth.currentUser?.uid);
+          getAllTasks(contextState.uid);
         })
       }
     })
@@ -222,15 +213,14 @@ const Home = () => {
   }
 
   const handleUpdateTask = (taskId, newDescription) => {
-    const currentUser = localStorage.getItem('userId')
     const db = getDatabase(firebase);
     const task = tasks.filter((task) => task.id === taskId)[0];
     const newTask = { ...task, description: newDescription }
     const updates = {
-      [`tasks/${currentUser}/${taskId}`]: newTask
+      [`tasks/${contextState.uid}/${taskId}`]: newTask
     };
     update(ref(db), updates).then(() => {
-      getAllTasks();
+      getAllTasks(contextState.uid);
       toggleUpdateModal()
     })  
   }
@@ -247,10 +237,6 @@ const Home = () => {
     }).length;
     return resultLength > 0;
   }
-
-  // if (loadingContent) {
-  //   return 
-  // }
 
   return (
     <div className="container">

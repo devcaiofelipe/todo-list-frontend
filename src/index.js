@@ -9,7 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 
 
@@ -45,6 +45,7 @@ const App = () => {
 
   React.useEffect(() => {
     const auth = getAuth();
+    setPersistence(auth, browserLocalPersistence)
     onAuthStateChanged(auth, (user) => {
       console.log('Passei no auth do app main')
       if (user) { 
@@ -54,10 +55,13 @@ const App = () => {
         
         if (!isGoogleAuth) {
           getDownloadURL(pathReference).then((url) => {
+            console.log('nao e auth google', { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: url, isGoogleAuth })
             setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: url, isGoogleAuth })
           })
+          .catch(e => console.log('error 5', e))
           return;
         }
+        console.log('nao e auth google', { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth })
         setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth })
       }
     })
