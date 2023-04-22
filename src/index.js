@@ -9,7 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-import { getAuth, onAuthStateChanged, setPersistence, inMemoryPersistence } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence } from 'firebase/auth';
 import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 
 
@@ -45,7 +45,7 @@ const App = () => {
 
   React.useEffect(() => {
     const auth = getAuth();
-    setPersistence(auth, inMemoryPersistence)
+    setPersistence(auth, browserSessionPersistence)
     onAuthStateChanged(auth, (user) => {
       if (user) { 
         const isGoogleAuth = user.providerData[0].providerId === 'google.com'
