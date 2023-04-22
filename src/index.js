@@ -47,7 +47,6 @@ const App = () => {
     const auth = getAuth();
     setPersistence(auth, browserLocalPersistence)
     onAuthStateChanged(auth, (user) => {
-      console.log('Passei no auth do app main')
       if (user) { 
         const isGoogleAuth = user.providerData[0].providerId === 'google.com'
         const storage = getStorage();
@@ -55,13 +54,11 @@ const App = () => {
         
         if (!isGoogleAuth) {
           getDownloadURL(pathReference).then((url) => {
-            console.log('nao e auth google', { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: url, isGoogleAuth })
             setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: url, isGoogleAuth })
           })
           .catch(e => console.log('error 5', e))
           return;
         }
-        console.log('nao e auth google', { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth })
         setContextState({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, isGoogleAuth })
       }
     })

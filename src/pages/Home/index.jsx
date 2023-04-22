@@ -9,10 +9,9 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';
 import { BsSearch } from 'react-icons/bs';
 import { ImExit } from 'react-icons/im';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import { getDatabase, ref, child, get, set, push, remove, update } from 'firebase/database';
-import { getStorage, ref as refDatabase, getDownloadURL } from 'firebase/storage';
 import { LoadingContent } from '../../components/LoadingContent/index';
 import { useNavigate, Link } from 'react-router-dom';
 import { GlobalContext } from '../../index';
@@ -31,39 +30,15 @@ const Home = () => {
   const [search, setSearch] = useState('');
   const [loadingContent, setLoadingContent] = useState('');
   const [dropdown, setDropdown] = useState(false);
-  const { contextState, setContextState } = useContext(GlobalContext)
-
-
-  // const handleUserInfo = useCallback((user) => {
-  //   const userId = user.uid;
-  //   const displayName = user.displayName;
-  //   const email = user.email;
-  //   const photoURL = user.photoURL;
-  //   const isGoogleAuth = user.providerData[0].providerId === 'google.com';
-  //   try {
-  //     if (!isGoogleAuth) {
-  //       const storage = getStorage();
-  //       const pathReference = refDatabase(storage, `pictures/${userId}/photo.png`);
-  //       console.log('pathhhh', pathReference);
-  //       getDownloadURL(pathReference).then((url) => {
-  //         // setContextState({ uid: userId, displayName, email, photoURL: url, isGoogleAuth })
-  //       })
-  //       .catch((e) => console.log('errorr', e))
-  //     } else {
-  //       // setContextState({ uid: userId, displayName, email, photoURL, isGoogleAuth })
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }, [setContextState])
-  
+  const { contextState } = useContext(GlobalContext)
 
   useEffect(() => {
-    console.log('passei no use effect');
     setLoadingContent(true);
-    getAllTasks(contextState.uid)
-    setLoadingContent(false);
-  }, [])
+    getAllTasks(contextState.uid);
+    setTimeout(() => {
+      setLoadingContent(false);
+    }, 1000);
+  }, [contextState.uid]);
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -73,11 +48,10 @@ const Home = () => {
     setSearch(e.target.value);
   }
 
-  const getAllTasks = (userIdSupplied) => {
+  const getAllTasks = (currentUserID) => {
     const dbRef = ref(getDatabase(firebase));
-    
-    const currentUser = userIdSupplied
-    get(child(dbRef, `tasks/${currentUser}`)).then((snapshot) => {
+    get(child(dbRef, `tasks/${currentUserID}`))
+    .then((snapshot) => {
       if (snapshot.exists()) {
         const keys = Object.keys(snapshot.val())
         const normalizedTasks = keys.map((key) => ({
@@ -90,17 +64,18 @@ const Home = () => {
       } else {
         setTasks([]);
       }
-    }).catch((error) => {
-      console.error('somee error', error);
-    });
+    })
+    .catch((error) => {
+      console.error('error 6', error);
+    })
   }
 
   const toggleDeleteModal = () => {
-    setDeleteModal(!deleteModal)
+    setDeleteModal(!deleteModal);
   }
 
   const toggleUpdateModal = () => {
-    setUpdateModal(!updateModal)
+    setUpdateModal(!updateModal);
   }
 
   const handleFilter = (e) => {
@@ -141,8 +116,8 @@ const Home = () => {
       checked: false,
       status: 'in-progress'
     });
-    getAllTasks(contextState.uid)
-    setFilterChoise('all')
+    getAllTasks(contextState.uid);
+    setFilterChoise('all');
     setTask('');
   }
 
@@ -151,7 +126,7 @@ const Home = () => {
     
     remove(ref(db, `tasks/${contextState.uid}/${taskId}`)).then(() => {
       getAllTasks(contextState.uid);
-      toggleDeleteModal()
+      toggleDeleteModal();
     })
   }
 
@@ -159,13 +134,13 @@ const Home = () => {
     if (!someChecked) {
       setSomeChecked(true);
     } else {
-      const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
+      const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task);
       const totalChecked = newTasks.filter((task) => task.checked).length
       if (!totalChecked) {
         setSomeChecked(false);
       }
     }
-    const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task)
+    const newTasks = tasks.map((task) => task.id === taskId ? { ...task, checked: !task.checked } : task);
     setTasks(newTasks);
   }
 
@@ -176,7 +151,7 @@ const Home = () => {
         remove(ref(db, `tasks/${contextState.uid}/${task.id}`))
         .then(() => {
           getAllTasks(contextState.uid);
-        })
+        });
       }
     })
   }
@@ -184,7 +159,7 @@ const Home = () => {
   const handleExit = () => {
     const auth = getAuth()
     signOut(auth).then(() => {
-      navigation('/')
+      navigation('/');
     })
   }
 
@@ -192,14 +167,14 @@ const Home = () => {
     if (!someChecked) {
       const newTasks = tasks.map((task) => ({
         ...task,
-        checked: true
+        checked: true,
       }))
       setTasks(newTasks);
       setSomeChecked(true);
     } else {
       const newTasks = tasks.map((task) => ({
         ...task,
-        checked: false
+        checked: false,
       }))
       setTasks(newTasks);
       setSomeChecked(false);
@@ -209,7 +184,7 @@ const Home = () => {
   const handleKeyPressed = (e) => {
     if (e.key === 'Enter') {
       handleAddTask();
-    }
+    };
   }
 
   const handleUpdateTask = (taskId, newDescription) => {
@@ -217,12 +192,12 @@ const Home = () => {
     const task = tasks.filter((task) => task.id === taskId)[0];
     const newTask = { ...task, description: newDescription }
     const updates = {
-      [`tasks/${contextState.uid}/${taskId}`]: newTask
+      [`tasks/${contextState.uid}/${taskId}`]: newTask,
     };
     update(ref(db), updates).then(() => {
       getAllTasks(contextState.uid);
-      toggleUpdateModal()
-    })  
+      toggleUpdateModal();
+    });
   }
 
   const handleDoneTask = (taskId) => {
