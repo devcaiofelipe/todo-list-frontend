@@ -32,22 +32,6 @@ const Home = () => {
   const [dropdown, setDropdown] = useState(false);
   const { contextState } = useContext(GlobalContext)
 
-  useEffect(() => {
-    setLoadingContent(true);
-    getAllTasks(contextState.uid);
-    setTimeout(() => {
-      setLoadingContent(false);
-    }, 1000);
-  }, [contextState.uid]);
-
-  const toggleDropdown = () => {
-    setDropdown(!dropdown);
-  }
-
-  const handleSearchInput = (e) => {
-    setSearch(e.target.value);
-  }
-
   const getAllTasks = (currentUserID) => {
     const dbRef = ref(getDatabase(firebase));
     get(child(dbRef, `tasks/${currentUserID}`))
@@ -68,6 +52,22 @@ const Home = () => {
     .catch((error) => {
       console.error('error 6', error);
     })
+  }
+
+  useEffect(() => {
+    setLoadingContent(true);
+    getAllTasks(contextState.uid);
+    setTimeout(() => {
+      setLoadingContent(false);
+    }, 1000);
+  }, [contextState.uid]);
+
+  const toggleDropdown = () => {
+    setDropdown(!dropdown);
+  }
+
+  const handleSearchInput = (e) => {
+    setSearch(e.target.value);
   }
 
   const toggleDeleteModal = () => {
@@ -111,12 +111,13 @@ const Home = () => {
     const db = getDatabase(firebase);
     const taskListRef = ref(db, `tasks/${contextState.uid}`);
     const newTaskRef = push(taskListRef);
-    set(newTaskRef, {
+    const data = {
       description: task,
       checked: false,
       status: 'in-progress'
-    });
-    getAllTasks(contextState.uid);
+    }
+    set(newTaskRef, data);
+    setTasks(prevState => ([...prevState, data]))
     setFilterChoise('all');
     setTask('');
   }
@@ -124,10 +125,12 @@ const Home = () => {
   const handleDeleteTask = (taskId) => {
     const db = getDatabase(firebase);
     
-    remove(ref(db, `tasks/${contextState.uid}/${taskId}`)).then(() => {
+    remove(ref(db, `tasks/${contextState.uid}/${taskId}`))
+    .then(() => {
       getAllTasks(contextState.uid);
       toggleDeleteModal();
     })
+    .catch((e) => console.error('error 10', e))
   }
 
   const handleCheckTask = (taskId) => {
@@ -151,16 +154,21 @@ const Home = () => {
         remove(ref(db, `tasks/${contextState.uid}/${task.id}`))
         .then(() => {
           getAllTasks(contextState.uid);
-        });
+        })
+        .catch((e) => {
+          console.error('error 7', e);
+        })
       }
     })
   }
 
   const handleExit = () => {
     const auth = getAuth()
-    signOut(auth).then(() => {
+    signOut(auth)
+    .then(() => {
       navigation('/');
     })
+    .catch((e) => console.log('error 8', e));
   }
 
   const handleCheckAll = () => {
@@ -194,10 +202,12 @@ const Home = () => {
     const updates = {
       [`tasks/${contextState.uid}/${taskId}`]: newTask,
     };
-    update(ref(db), updates).then(() => {
+    update(ref(db), updates)
+    .then(() => {
       getAllTasks(contextState.uid);
       toggleUpdateModal();
-    });
+    })
+    .catch((e) => console.error('error 9', e));
   }
 
   const handleDoneTask = (taskId) => {
@@ -213,11 +223,12 @@ const Home = () => {
     return resultLength > 0;
   }
 
+  if (loadingContent) {
+    return <LoadingContent/>
+  }
+
   return (
     <div className="container">
-
-
-      {loadingContent && <LoadingContent/> }
 
       <header className="header-container">
         <p className="header-title">Mind Organizer</p>
