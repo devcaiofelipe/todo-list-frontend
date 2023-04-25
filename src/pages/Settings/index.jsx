@@ -1,5 +1,5 @@
 import './styles.css';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { AiOutlineCopyrightCircle } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { GlobalContext } from '../../index';
@@ -10,7 +10,8 @@ import {
   signOut,
   reauthenticateWithCredential,
   EmailAuthProvider,
-  updatePassword
+  updatePassword,
+  deleteUser
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { MdAddAPhoto } from 'react-icons/md';
@@ -20,6 +21,8 @@ import { Link } from 'react-router-dom';
 import { ref as refDatabase, getDownloadURL } from 'firebase/storage'
 import defaultLogo from '../../assets/defaultLogo.jpeg';
 import storage from '../../shared/firebaseStorage';
+import { onAuthStateChanged } from 'firebase/auth';
+import DeleteAccountModal from '../../components/DeleteAccountModal';
 
 const Settings = () => {
   const [editingName, setEditingName] = useState(false);
@@ -34,6 +37,23 @@ const Settings = () => {
   const [passwordDoesNotMatch, setPasswordDoesNotMatch] = useState(false);
   const [oldPasswordWrong, setOldPasswordWrong] = useState(false);
   const [userProfilePicture, setProfilePicture] = useState(null);
+
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const toggleModal = () => {
+    setDeleteModal(!deleteModal);
+  }
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('a');
+      } else {
+        console.log('b');
+      }
+    })
+  }, []);
 
   const { contextState, setContextState } = useContext(GlobalContext);
   const navigation = useNavigate();
@@ -113,15 +133,15 @@ const Settings = () => {
       return;
     }
     reauthenticateWithCredential(auth.currentUser, credential)
-      .then(() => {
-        updatePassword(auth.currentUser, newPassword);
-        signOut(auth).then(() => navigation('/'))
-      })
-      .catch((e) => {
-        if (e.message === 'Firebase: Error (auth/wrong-password).') {
-          setOldPasswordWrong(true);
-        }
-      });
+    .then(() => {
+      updatePassword(auth.currentUser, newPassword);
+      signOut(auth).then(() => navigation('/'))
+    })
+    .catch((e) => {
+      if (e.message === 'Firebase: Error (auth/wrong-password).') {
+        setOldPasswordWrong(true);
+      }
+    });
   }
 
   const updateProfilePicture = async () => {
@@ -153,6 +173,15 @@ const Settings = () => {
     });
   }
 
+  const handleDeleteAccount = () => {
+    const auth = getAuth();
+    deleteUser(auth.currentUser)
+    .then(() => {
+      navigation('/');
+    })
+    .catch((e) => console.error('error 11', e))
+  }
+
   return (
     <>
       <header className="header-container-settings">
@@ -160,8 +189,13 @@ const Settings = () => {
         <div className="logout-container">
           <button onClick={handleSignOut}><ImExit className="exit-icon"/></button>
         </div>
-        
       </header>
+
+      {deleteModal && <DeleteAccountModal
+        toggleModal={toggleModal}
+        deleteAction={handleDeleteAccount}
+      />}
+
       <div className="settings-container">
         <div className="settings-content">
           <div className="settings-header">
@@ -230,6 +264,7 @@ const Settings = () => {
                 </div>
               </div>
             </li>
+            <span className="line"></span>
             <li className="li-box">
               <div onClick={toggleEditPassword} style={{ display: editingPassword ? 'none' : 'block', width: '100%' }}>
                 <div className="li-content">
@@ -269,8 +304,8 @@ const Settings = () => {
             </li>
           </ul>
           <footer className="footer-container">
-            <span>Mind organizer <AiOutlineCopyrightCircle className="copyright" /> 2023</span>
-            <button className="delete-acc-button">Delete my account<BsTrash /></button>
+            <span>Mind organizer <AiOutlineCopyrightCircle className="copyright"/>2023</span>
+            <button className="delete-acc-button" onClick={toggleModal}>Delete my account<BsTrash/></button>
           </footer>
         </div>
       </div>
