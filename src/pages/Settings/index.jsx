@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom';
 import { ref as refDatabase, getDownloadURL } from 'firebase/storage'
 import defaultLogo from '../../assets/defaultLogo.jpeg';
 import storage from '../../shared/firebaseStorage';
-import { onAuthStateChanged } from 'firebase/auth';
 import DeleteAccountModal from '../../components/DeleteAccountModal';
 
 const Settings = () => {
@@ -43,17 +42,6 @@ const Settings = () => {
   const toggleModal = () => {
     setDeleteModal(!deleteModal);
   }
-
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('a');
-      } else {
-        console.log('b');
-      }
-    })
-  }, []);
 
   const { contextState, setContextState } = useContext(GlobalContext);
   const navigation = useNavigate();
