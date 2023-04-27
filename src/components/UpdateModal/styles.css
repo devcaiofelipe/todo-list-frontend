@@ -1,4 +1,4 @@
-.modal, .overlay {
+.modal, .overlay-update {
   width: 100vw;
   height: 100vh;
   top: 0;
@@ -8,11 +8,11 @@
   position: fixed;
 }
 
-.overlay {
+.overlay-update {
   background: rgba(49,49,49,0.8);
 }
 
-.modal-content {
+.modal-content-update {
   position: relative;
   top: 40%;
   left: 50%;

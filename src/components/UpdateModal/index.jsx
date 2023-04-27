@@ -17,8 +17,8 @@ const UpdateModal = ({ toggleModal, idToUpdate, handleUpdateTask, oldValue }) =>
 
   return (
     <div className="modal">
-      <div onClick={toggleModal} className="overlay"></div>
-      <div className="modal-content">
+      <div onClick={toggleModal} className="overlay-update"></div>
+      <div className="modal-content-update ">
         <div className="modal-header">
           <h2 className="font">Edit Task</h2>
             <i>
