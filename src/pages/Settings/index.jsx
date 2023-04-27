@@ -1,5 +1,5 @@
 import './styles.css';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { AiOutlineCopyrightCircle } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { GlobalContext } from '../../index';
