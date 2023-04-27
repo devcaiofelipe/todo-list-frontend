@@ -142,14 +142,7 @@ const Settings = () => {
         photoURL,
       })
       const pathReference = refDatabase(storage, `pictures/${auth.currentUser.uid}/photo.png`);
-      const url = await getDownloadURL(pathReference)
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-        setContextState(prevState => ({ ...prevState, photoURL: xhr.response }))
-      };
-      xhr.open('GET', url);
-      xhr.send();
+      getDownloadURL(pathReference).then((url) => setContextState(prevState => ({ ...prevState, photoURL: url })))
       setProfilePicture(null)
     }
   }
